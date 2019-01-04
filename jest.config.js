@@ -10,6 +10,6 @@ module.exports = {
     '^@controllers(.*)$': '<rootDir>/src/controllers$1',
     '^@routes(.*)$': '<rootDir>/src/routes$1',
   },
-  testMatch: ['**/test/**/*.test.(ts|js)'],
+  testMatch: ['**/test/**/*.test.ts'],
   testEnvironment: 'node',
 };
