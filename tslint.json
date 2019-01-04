@@ -1,0 +1,20 @@
+{
+  "extends": [
+    "tslint:latest",
+    "tslint-config-prettier",
+    "tslint-plugin-prettier",
+    "tslint-immutable",
+    "tslint-sonarts",
+    "tslint-config-airbnb"
+  ],
+  "rules": {
+    "prettier": true,
+    "no-console": false,
+    "no-implicit-dependencies": false,
+    "no-submodule-imports": false,
+    "import-name": false,
+    "object-literal-sort-keys": false,
+    "no-unused-variable": [true, { "ignore-pattern": "^_" }],
+    "ter-arrow-parens": false
+  }
+}
