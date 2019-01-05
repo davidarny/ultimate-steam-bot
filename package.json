@@ -15,18 +15,31 @@
     "@types/express": "^4.16.0",
     "@types/express-bunyan-logger": "^1.3.0",
     "@types/helmet": "^0.0.42",
+    "@types/lodash": "^4.14.119",
     "@types/node": "^10.12.18",
+    "@types/redis": "^2.8.10",
+    "@types/steam-totp": "^2.0.0",
+    "@types/steamid": "^1.1.0",
     "body-parser": "^1.18.3",
     "bunyan": "^1.8.12",
     "compression": "^1.7.3",
+    "core-decorators": "^0.20.0",
     "cross-env": "^5.2.0",
     "dotenv": "^6.2.0",
     "errorhandler": "^1.5.0",
     "express": "^4.16.4",
     "express-bunyan-logger": "^1.3.3",
     "helmet": "^3.15.0",
+    "lodash": "^4.17.11",
     "module-alias": "^2.1.0",
+    "redis": "^2.8.0",
+    "steam-totp": "^2.1.0",
+    "steam-tradeoffer-manager": "^2.9.4",
+    "steam-user": "^3.29.1",
+    "steamcommunity": "^3.38.0",
+    "steamid": "^1.1.0",
     "typescript": "^3.2.2",
+    "utility-types": "^3.2.0",
     "winston-console-formatter": "^1.0.0-beta.3"
   },
   "scripts": {
@@ -66,7 +79,9 @@
     "@utils": "dist/utils",
     "@entities": "dist/entities",
     "@controllers": "dist/controllers",
+    "@services": "dist/services",
     "@routes": "dist/routes",
-    "@app": "dist/app"
+    "@app": "dist/app",
+    "@config": "dist/config"
   }
 }

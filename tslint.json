@@ -15,6 +15,8 @@
     "import-name": false,
     "object-literal-sort-keys": false,
     "no-unused-variable": [true, { "ignore-pattern": "^_" }],
-    "ter-arrow-parens": false
+    "ter-arrow-parens": false,
+    "no-var-requires": false,
+    "variable-name": false
   }
 }

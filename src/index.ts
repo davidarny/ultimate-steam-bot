@@ -1,6 +1,4 @@
-// tslint:disable-next-line:no-var-requires
 require('module-alias/register');
-
 import logger from '@utils/logger';
 import app from './app';
 

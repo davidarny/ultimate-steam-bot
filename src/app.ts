@@ -1,6 +1,6 @@
+import config from '@config';
 import ENodeEnv from '@entities/node-env';
 import routes from '@routes';
-import { ENVIRONMENT, PORT } from '@utils/secrets';
 import bodyparser from 'body-parser';
 import compression from 'compression';
 import errorhandler from 'errorhandler';
@@ -9,10 +9,10 @@ import ebl from 'express-bunyan-logger';
 import helmet from 'helmet';
 
 const app = express();
-const isTestEnv = ENVIRONMENT === ENodeEnv.TEST;
-const isDevEnv = ENVIRONMENT === ENodeEnv.DEVELOPMENT;
+const isTestEnv = config.app.env === ENodeEnv.TEST;
+const isDevEnv = config.app.env === ENodeEnv.DEVELOPMENT;
 
-app.set('port', PORT);
+app.set('port', config.app.port);
 app.use(compression());
 app.use(helmet());
 app.use(bodyparser.json());
