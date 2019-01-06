@@ -20,7 +20,6 @@ declare module 'steam-user' {
 
   export default class SteamUser {
     public static readonly EPersonaState: IPersonaStateKeys;
-
     /**
      * `null` if not connected, a `SteamID` containing your SteamID otherwise.
      *
@@ -33,11 +32,17 @@ declare module 'steam-user' {
       T extends keyof ISteamUserOptions,
       P extends NonNullable<ISteamUserOptions[T]>
     >(option: T, value: P): void;
+
     public setOptions(options: ISteamUserOptions): void;
+
     public on(event: string, callback: () => void): void;
+
     public on(event: 'error', callback: (error: ISteamUserError) => void): void;
+
     public webLogOn(): void;
+
     public logOn(params: ILogOnParams): void;
+
     public setPersona(state: EPersonaState, name?: string): void;
   }
 }
