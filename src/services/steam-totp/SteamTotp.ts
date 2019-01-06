@@ -1,3 +1,4 @@
+import config from '@config';
 import logger from '@utils/logger';
 import { autobind } from 'core-decorators';
 import SteamTotpPkg from 'steam-totp';
@@ -13,6 +14,16 @@ export class SteamTotp {
 
   public getAuthCode(sharedSecret: string): string {
     return SteamTotpPkg.generateAuthCode(sharedSecret, this.offset);
+  }
+
+  public getConfirmationKeys(): [number, string, string] {
+    const time = Math.floor(Date.now() / 1000);
+    if (!config.bot.identitySecret) {
+      throw new Error('No `identitySecret` specified for bot!');
+    }
+    const confKey = SteamTotpPkg.getConfirmationKey(config.bot.identitySecret, time, 'conf');
+    const allowKey = SteamTotpPkg.getConfirmationKey(config.bot.identitySecret, time, 'allow');
+    return [time, confKey, allowKey];
   }
 
   private run(): void {

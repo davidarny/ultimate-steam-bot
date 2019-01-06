@@ -35,9 +35,20 @@ declare module 'steam-user' {
 
     public setOptions(options: ISteamUserOptions): void;
 
-    public on(event: string, callback: () => void): void;
+    public on(event: string, callback: (...args: any[]) => void): void;
 
     public on(event: 'error', callback: (error: ISteamUserError) => void): void;
+
+    public on(event: 'webSession', callback: (sessionId: string, cookies: object[]) => void): void;
+
+    public on(
+      event: 'steamGuard',
+      callback: (
+        domain: string | null,
+        callback: (code: string) => void,
+        lastCodeWrong: boolean,
+      ) => void,
+    ): void;
 
     public webLogOn(): void;
 
