@@ -1,5 +1,5 @@
 declare module 'steam-user' {
-  export interface IPersonaStateKeys {
+  interface IPersonaStateKeys {
     readonly Offline: 0;
     readonly Online: 1;
     readonly Busy: 2;
@@ -11,7 +11,7 @@ declare module 'steam-user' {
     readonly Max: 8;
   }
 
-  export enum EPersonaState {
+  enum EPersonaState {
     Offline = 0,
     Online = 1,
     Busy = 2,

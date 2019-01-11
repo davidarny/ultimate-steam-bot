@@ -1,3 +1,5 @@
+import { ISteamUserError } from '@entities/steam-user';
+
 // tslint:disable:max-line-length
 declare module 'steam-user' {
   export enum EMachineIDType {
@@ -14,11 +16,8 @@ declare module 'steam-user' {
     'PersistentRandom' = 4,
   }
 
-  export interface ISteamUserError extends Error {
-    readonly eresult: EErrorResult;
-  }
-
   export default class SteamUser {
+    public static readonly EErrorResult: IErrorResultKeys;
     public static readonly EPersonaState: IPersonaStateKeys;
     /**
      * `null` if not connected, a `SteamID` containing your SteamID otherwise.

@@ -8,5 +8,9 @@ declare module 'steamcommunity' {
       allowKey: string,
       callback: (error: Error | null, confs: object[]) => void,
     ): void;
+
+    public on(event: string, callback: (...args: any[]) => void): void;
+
+    public on(event: 'sessionExpired', callback: (error: Error) => void): void;
   }
 }

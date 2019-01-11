@@ -7,4 +7,8 @@ export enum EBotEvents {
   SET_COOKIES = 'setCookies',
   CONFIRMATION = 'confirmation',
   HEALTHCHECK = 'healthcheck',
+  NEW_OFFER = 'newOffer',
+  OFFER_DECLINED = 'offerDeclined',
+  SEND_OFFER_STATE = 'sendOfferState',
+  SEND_OFFER_ITEMS = 'sendOfferItems',
 }
