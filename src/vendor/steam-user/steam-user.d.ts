@@ -17,7 +17,7 @@ declare module 'steam-user' {
   }
 
   export default class SteamUser {
-    public static readonly EErrorResult: IErrorResultKeys;
+    public static readonly EResult: IResultKeys;
     public static readonly EPersonaState: IPersonaStateKeys;
     /**
      * `null` if not connected, a `SteamID` containing your SteamID otherwise.
@@ -49,10 +49,21 @@ declare module 'steam-user' {
       ) => void,
     ): void;
 
+    public on(
+      event: 'playingState',
+      callback: (blocked: boolean, playingApp: string) => void,
+    ): void;
+
+    public on(event: 'user', callback: (sid: object, user: object) => void): void;
+
     public webLogOn(): void;
 
     public logOn(params: ILogOnParams): void;
 
     public setPersona(state: EPersonaState, name?: string): void;
+
+    public getPersonas(steamIds: string[], callback?: (personas: object[]) => void): void;
+
+    public gamesPlayed(apps: Array<string | number | object>, force?: boolean): void;
   }
 }

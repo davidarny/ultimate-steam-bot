@@ -11,4 +11,7 @@ export enum EBotEvents {
   OFFER_DECLINED = 'offerDeclined',
   SEND_OFFER_STATE = 'sendOfferState',
   SEND_OFFER_ITEMS = 'sendOfferItems',
+  GC_CONNECTED = 'gcConnected',
+  PLAYING_STATE = 'playingState',
+  USER = 'user',
 }

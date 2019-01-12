@@ -1,6 +1,6 @@
 {
     "src/**/*.ts": [
-        "tslint --project tsconfig.json --fix",
+        "tslint -c tslint.json -p tsconfig.json --fix",
         "git add ."
     ]
 }

@@ -1,5 +1,5 @@
 declare module 'steam-user' {
-  interface IErrorResultKeys {
+  interface IResultKeys {
     readonly Invalid: 0;
     readonly OK: 1;
     readonly Fail: 2;
@@ -105,7 +105,7 @@ declare module 'steam-user' {
     readonly PhoneActivityLimitExceeded: 97;
   }
 
-  enum EErrorResult {
+  enum EResult {
     Invalid = 0,
     OK = 1,
     Fail = 2,

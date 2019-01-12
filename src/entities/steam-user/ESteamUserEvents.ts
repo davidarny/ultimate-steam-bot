@@ -4,4 +4,6 @@ export enum ESteamUserEvents {
   DISCONNECTED = 'disconnected',
   STEAM_GUARD = 'steamGuard',
   WEB_SESSION = 'webSession',
+  PLAYING_STATE = 'playingState',
+  USER = 'user',
 }
