@@ -1,6 +1,6 @@
 // tslint:disable:no-duplicate-string
 import config from '@config';
-import { EGlobalOffensiveEvents } from '@entities/globaloffensive/EGlobalOffensiveEvents';
+import { EGlobalOffensiveEvents } from '@entities/globaloffensive';
 import { ETradeOfferEvents, ITradeOffer } from '@entities/steam-tradeoffer-manager';
 import { ESteamUserEvents, ISteamUserError } from '@entities/steam-user';
 import { ESteamCommunityEvents } from '@entities/steamcommunity';
@@ -16,7 +16,7 @@ import { setInterval } from 'timers';
 import { EBotEvents } from './EBotEvents';
 import { EBotStatuses } from './EBotStatuses';
 
-export class Bot extends EventEmitter {
+export class SteamBot extends EventEmitter {
   // Timers
   private static readonly USER_TIMEOUT = 2500; // 1 sec
   private static readonly PERSONAS_TIMEOUT = 5000; // 1 sec
@@ -113,7 +113,7 @@ export class Bot extends EventEmitter {
         return;
       }
       this.client.getPersonas([config.bot.steamId], this.onClientUser);
-    }, Bot.USER_TIMEOUT);
+    }, SteamBot.USER_TIMEOUT);
     this.emit(EBotEvents.LOGIN);
   }
 
@@ -131,7 +131,7 @@ export class Bot extends EventEmitter {
         return;
       }
       this.client.getPersonas([config.bot.steamId], this.onClientGetPersonas);
-    }, Bot.PERSONAS_TIMEOUT);
+    }, SteamBot.PERSONAS_TIMEOUT);
   }
 
   @autobind
@@ -144,7 +144,7 @@ export class Bot extends EventEmitter {
     this.emit(EBotEvents.ERROR, error);
     if (error.eresult === SteamUser.EResult.RateLimitExceeded) {
       this.emit(EBotEvents.LIMIT, new Error('Steam Limit! Will try re-login in 1 hour!'), error);
-      setTimeout(() => this.login(), Bot.RELOGIN_TIMEOUT);
+      setTimeout(() => this.login(), SteamBot.RELOGIN_TIMEOUT);
     }
   }
 
@@ -296,6 +296,9 @@ export class Bot extends EventEmitter {
 
   private healthcheck(): void {
     this.emit(EBotEvents.HEALTHCHECK, this.statuses);
-    setInterval(() => this.emit(EBotEvents.HEALTHCHECK, this.statuses), Bot.HEALTHCHECK_INTERVAL);
+    setInterval(
+      () => this.emit(EBotEvents.HEALTHCHECK, this.statuses),
+      SteamBot.HEALTHCHECK_INTERVAL,
+    );
   }
 }

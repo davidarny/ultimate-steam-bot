@@ -1,5 +1,5 @@
 import config from '@config';
-import SteamBot, { EBotEvents, EBotStatuses } from '@entities/bot';
+import SteamBot, { EBotEvents, EBotStatuses } from '@entities/steam-bot';
 import chai from 'chai';
 import cap from 'chai-as-promised';
 import _ from 'lodash';
