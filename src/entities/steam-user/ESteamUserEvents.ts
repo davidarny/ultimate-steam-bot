@@ -5,5 +5,4 @@ export enum ESteamUserEvents {
   STEAM_GUARD = 'steamGuard',
   WEB_SESSION = 'webSession',
   PLAYING_STATE = 'playingState',
-  USER = 'user',
 }

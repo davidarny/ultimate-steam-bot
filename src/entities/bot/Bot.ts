@@ -1,3 +1,4 @@
+// tslint:disable:no-duplicate-string
 import config from '@config';
 import { EGlobalOffensiveEvents } from '@entities/globaloffensive/EGlobalOffensiveEvents';
 import { ETradeOfferEvents, ITradeOffer } from '@entities/steam-tradeoffer-manager';
@@ -7,19 +8,29 @@ import SteamTotp from '@services/steam-totp';
 import { autobind } from 'core-decorators';
 import { EventEmitter } from 'events';
 import GlobalOffensive from 'globaloffensive';
-import { first, get, isEmpty, isUndefined } from 'lodash';
+import _ from 'lodash';
 import TradeOfferManager from 'steam-tradeoffer-manager';
 import SteamUser from 'steam-user';
 import SteamCommunity from 'steamcommunity';
 import { setInterval } from 'timers';
 import { EBotEvents } from './EBotEvents';
-import { EBotStatus } from './EBotStatus';
+import { EBotStatuses } from './EBotStatuses';
 
 export class Bot extends EventEmitter {
+  // Timers
+  private static readonly USER_TIMEOUT = 2500; // 1 sec
+  private static readonly PERSONAS_TIMEOUT = 5000; // 1 sec
   private static readonly RELOGIN_TIMEOUT = 60 * 60 * 1000 + 500; // 60.5 mins
   private static readonly HEALTHCHECK_INTERVAL = 1000; // 1 sec
-  private status = EBotStatus.IDLE;
-  private blocked = false;
+  // Flags
+  private statuses = {
+    [EBotStatuses.WEB_SESSION]: false,
+    [EBotStatuses.DISCONNECTED]: false,
+    [EBotStatuses.GC_CONNECTED]: false,
+    [EBotStatuses.SESSION_EXPIRED]: false,
+    [EBotStatuses.BLOCKED]: false,
+  };
+  // Libs
   private readonly client = new SteamUser();
   private readonly totp = new SteamTotp();
   private readonly community = new SteamCommunity();
@@ -49,7 +60,6 @@ export class Bot extends EventEmitter {
     this.client.on(ESteamUserEvents.STEAM_GUARD, this.onClientSteamGuard);
     this.client.on(ESteamUserEvents.WEB_SESSION, this.onClientWebSession);
     this.client.on(ESteamUserEvents.PLAYING_STATE, this.onClientPlayingState);
-    this.client.on(ESteamUserEvents.USER, this.onClientUser);
     // Community handlers
     this.community.on(ESteamCommunityEvents.SESSION_EXPIRED, this.onCommunitySessionExpired);
     // Manager handlers
@@ -62,26 +72,15 @@ export class Bot extends EventEmitter {
   // Client handler
 
   @autobind
-  private onClientUser(sid: object, user: object): void {
-    if (!this.blocked) {
-      this.client.gamesPlayed([config.app.game]);
-    } else {
-      this.emit(EBotEvents.ERROR, new Error('Bot got `blocked` state!'));
-      return;
-    }
-    this.emit(EBotEvents.USER, sid, user);
-  }
-
-  @autobind
   private onClientPlayingState(blocked: boolean, playingApp: string): void {
     if (blocked) {
-      this.blocked = true;
+      this.statuses[EBotStatuses.BLOCKED] = true;
     }
     this.emit(EBotEvents.PLAYING_STATE, blocked, playingApp);
   }
 
   @autobind
-  private onClientWebSession(_: unknown, cookies: object[]): void {
+  private onClientWebSession(_sessionId: unknown, cookies: object[]): void {
     this.manager.setCookies(cookies, this.onManagerSetCookies);
     this.community.setCookies(cookies);
     const [time, confKey, allowKey] = this.totp.getConfirmationKeys();
@@ -89,7 +88,7 @@ export class Bot extends EventEmitter {
   }
 
   @autobind
-  private onClientSteamGuard(_: unknown, callback: (code: string) => void): void {
+  private onClientSteamGuard(_domain: unknown, callback: (code: string) => void): void {
     if (!config.bot.sharedSecret) {
       this.emit(EBotEvents.ERROR, new Error('No `sharedSecret` specified for bot!'));
       return;
@@ -102,18 +101,42 @@ export class Bot extends EventEmitter {
   @autobind
   private onClientDisconnect(): void {
     this.emit(EBotEvents.DISCONNECT);
-    this.status = EBotStatus.DISCONNECTED;
+    this.statuses[EBotStatuses.DISCONNECTED] = true;
   }
 
   @autobind
   private onClientLogOn(): void {
     this.client.setPersona(SteamUser.EPersonaState.Online);
-    if (!config.bot.steamId) {
-      this.emit(EBotEvents.ERROR, new Error('No `steamId` specified for bot!'));
+    setTimeout(() => {
+      if (!config.bot.steamId) {
+        this.emit(EBotEvents.ERROR, new Error('No `steamId` specified for bot!'));
+        return;
+      }
+      this.client.getPersonas([config.bot.steamId], this.onClientUser);
+    }, Bot.USER_TIMEOUT);
+    this.emit(EBotEvents.LOGIN);
+  }
+
+  @autobind
+  private onClientUser(): void {
+    if (!this.statuses[EBotStatuses.BLOCKED]) {
+      this.client.gamesPlayed([config.app.game]);
+    } else {
+      this.emit(EBotEvents.ERROR, new Error('Bot got `blocked` state!'));
       return;
     }
-    this.client.getPersonas([config.bot.steamId]);
-    this.emit(EBotEvents.LOGIN);
+    setTimeout(() => {
+      if (!config.bot.steamId) {
+        this.emit(EBotEvents.ERROR, new Error('No `steamId` specified for bot!'));
+        return;
+      }
+      this.client.getPersonas([config.bot.steamId], this.onClientGetPersonas);
+    }, Bot.PERSONAS_TIMEOUT);
+  }
+
+  @autobind
+  private onClientGetPersonas(personas: object): void {
+    this.emit(EBotEvents.USER, personas);
   }
 
   @autobind
@@ -129,7 +152,7 @@ export class Bot extends EventEmitter {
 
   @autobind
   private onCommunitySessionExpired(error: Error): void {
-    this.status = EBotStatus.SESSION_EXPIRED;
+    this.statuses[EBotStatuses.SESSION_EXPIRED] = true;
     this.emit(EBotEvents.ERROR, new Error('SteamCommunity session has expired'), error);
     this.login();
   }
@@ -146,7 +169,7 @@ export class Bot extends EventEmitter {
   // Manager handlers
 
   @autobind
-  private onManagerSentOfferChanged(offer: ITradeOffer, _: unknown): void {
+  private onManagerSentOfferChanged(offer: ITradeOffer, _reason: unknown): void {
     if (offer.state === TradeOfferManager.ETradeState.Accepted) {
       offer.getExchangeDetails((...args) => this.onOfferGetExchangeDetails(offer, ...args));
     }
@@ -172,7 +195,7 @@ export class Bot extends EventEmitter {
       return this.manager.doPoll();
     }
     this.emit(EBotEvents.SET_COOKIES);
-    this.status = EBotStatus.WEB_SESSION;
+    this.statuses[EBotStatuses.WEB_SESSION] = true;
   }
 
   // Offer handler
@@ -201,20 +224,20 @@ export class Bot extends EventEmitter {
           return;
         }
         return {
-          asset_id: get(item, 'new_assetid'),
-          app_id: get(item, 'appid'),
-          classid: get(item, 'classid'),
-          market_hash_name: get(item, 'market_hash_name'),
+          asset_id: _.get(item, 'new_assetid'),
+          app_id: _.get(item, 'appid'),
+          classid: _.get(item, 'classid'),
+          market_hash_name: _.get(item, 'market_hash_name'),
           link:
-            get(item, 'actions') && first(get(item, 'actions'))
-              ? first<string>(get(item, 'actions'))!
+            _.get(item, 'actions') && _.first(_.get(item, 'actions'))
+              ? _.first<string>(_.get(item, 'actions'))!
                   .replace('%owner_steamid%', config.bot.steamId)
-                  .replace('%assetid%', get(item, 'assetid'))
+                  .replace('%assetid%', _.get(item, 'assetid'))
               : '',
         };
       })
-      .filter(item => !isUndefined(item));
-    if (!isEmpty(nextReceivedItems)) {
+      .filter(item => !_.isUndefined(item));
+    if (!_.isEmpty(nextReceivedItems)) {
       this.emit(
         EBotEvents.SEND_OFFER_ITEMS,
         offer.id,
@@ -242,7 +265,7 @@ export class Bot extends EventEmitter {
 
   @autobind
   private onCoordinatorConnected(): void {
-    this.status = EBotStatus.GC_CONNECTED;
+    this.statuses[EBotStatuses.GC_CONNECTED] = true;
     this.emit(EBotEvents.GC_CONNECTED);
   }
 
@@ -272,7 +295,7 @@ export class Bot extends EventEmitter {
   }
 
   private healthcheck(): void {
-    this.emit(EBotEvents.HEALTHCHECK, this.status);
-    setInterval(() => this.emit(EBotEvents.HEALTHCHECK, this.status), Bot.HEALTHCHECK_INTERVAL);
+    this.emit(EBotEvents.HEALTHCHECK, this.statuses);
+    setInterval(() => this.emit(EBotEvents.HEALTHCHECK, this.statuses), Bot.HEALTHCHECK_INTERVAL);
   }
 }

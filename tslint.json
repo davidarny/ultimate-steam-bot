@@ -9,7 +9,7 @@
   ],
   "rules": {
     "prettier": true,
-    "no-console": false,
+    "align": [true, "parameters", "statements", "members", "elements"],
     "no-implicit-dependencies": false,
     "no-submodule-imports": false,
     "import-name": false,

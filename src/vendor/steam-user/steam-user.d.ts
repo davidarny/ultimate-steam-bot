@@ -62,7 +62,7 @@ declare module 'steam-user' {
 
     public setPersona(state: EPersonaState, name?: string): void;
 
-    public getPersonas(steamIds: string[], callback?: (personas: object[]) => void): void;
+    public getPersonas(steamIds: string[], callback?: (personas: object) => void): void;
 
     public gamesPlayed(apps: Array<string | number | object>, force?: boolean): void;
   }
