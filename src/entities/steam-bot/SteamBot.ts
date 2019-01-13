@@ -1,9 +1,11 @@
 import config from '@config';
 import { EGlobalOffensiveEvents } from '@entities/globaloffensive';
+import ENodeEnv from '@entities/node-env';
 import { ETradeOfferEvents } from '@entities/steam-tradeoffer-manager';
 import { ESteamUserEvents } from '@entities/steam-user';
 import { ESteamCommunityEvents } from '@entities/steamcommunity';
 import SteamTotp from '@services/steam-totp';
+import { ENVIRONMENT } from '@utils/secrets';
 import { EventEmitter } from 'events';
 import GlobalOffensive from 'globaloffensive';
 import TradeOfferManager from 'steam-tradeoffer-manager';
@@ -18,12 +20,20 @@ import { EBotEvents } from './EBotEvents';
 import { EBotStatuses } from './EBotStatuses';
 
 export class SteamBot extends EventEmitter {
+  public static getInstance(): SteamBot {
+    if (!SteamBot.instance) {
+      SteamBot.instance = new SteamBot();
+    }
+    return SteamBot.instance;
+  }
+
+  private static instance: SteamBot;
   // Timers
-  private static readonly HEALTHCHECK_INTERVAL = 1000; // 1 sec
+  private static readonly HEALTHCHECK_INTERVAL = ENVIRONMENT === ENodeEnv.TEST ? 1000 : 15000;
   // Flags
   public statuses = {
     [EBotStatuses.WEB_SESSION]: false,
-    [EBotStatuses.DISCONNECTED]: false,
+    [EBotStatuses.DISCONNECTED]: true,
     [EBotStatuses.GC_CONNECTED]: false,
     [EBotStatuses.SESSION_EXPIRED]: false,
     [EBotStatuses.BLOCKED]: false,
@@ -50,10 +60,19 @@ export class SteamBot extends EventEmitter {
     coordinator: new GlobalOffensiveController(this),
   };
 
-  constructor() {
+  private constructor() {
     super();
     this.init();
     this.healthcheck();
+  }
+
+  public getInventory(
+    gameId: number,
+    steamId: string | null,
+    callback: (error: Error | null, items: object[]) => void,
+  ): void {
+    const userSteamId = steamId || this.client.steamID;
+    this.community.getUserInventoryContents(userSteamId, gameId, 2, false, 'english', callback);
   }
 
   public login(): void {

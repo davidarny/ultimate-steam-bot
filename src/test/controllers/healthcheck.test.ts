@@ -1,6 +1,7 @@
 import app from '@app';
 import chai from 'chai';
 import request from 'supertest';
+
 const expect = chai.expect;
 
 describe('GET /healthcheck', () => {

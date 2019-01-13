@@ -1,6 +1,6 @@
-// tslint:disable:no-unused-expression
 import config from '@config';
 import chai from 'chai';
+
 const expect = chai.expect;
 
 describe('App Config', () => {

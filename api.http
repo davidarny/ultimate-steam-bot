@@ -1,1 +1,8 @@
 GET http://localhost:3000/healthcheck
+
+###
+
+POST http://localhost:3000/inventory/my
+Content-Type: application/json
+
+{ "gameID": 730 }

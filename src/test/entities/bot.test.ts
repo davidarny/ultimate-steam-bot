@@ -9,13 +9,16 @@ const expect = chai.expect;
 type TSteamBotStatus = { [K in EBotEvents]: string };
 
 describe('Bot', () => {
-  const bot = new SteamBot();
+  const bot = SteamBot.getInstance();
   const mocks = {
     [EBotEvents.LOGIN]: getMockPromise(EBotEvents.LOGIN, bot),
     [EBotEvents.SET_COOKIES]: getMockPromise(EBotEvents.SET_COOKIES, bot),
     [EBotEvents.USER]: getMockPromise(EBotEvents.USER, bot),
     [EBotEvents.GC_CONNECTED]: getMockPromise(EBotEvents.GC_CONNECTED, bot),
   };
+  bot.on(EBotEvents.ERROR, console.error.bind(console));
+
+  beforeAll(async () => sleep(15000), 20000);
 
   it('should login', async () => expect(mocks[EBotEvents.LOGIN]).to.be.fulfilled);
 
@@ -66,8 +69,9 @@ describe('Bot', () => {
 });
 
 function getMockPromise(event: EBotEvents, bot: SteamBot) {
-  return new Promise((resolve, reject) => {
-    bot.on(event, resolve);
-    bot.on(EBotEvents.ERROR, reject);
-  });
+  return new Promise(resolve => bot.on(event, resolve));
+}
+
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

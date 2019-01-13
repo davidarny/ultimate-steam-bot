@@ -25,22 +25,24 @@ export class SteamUserController {
   }
 
   public onPlayingState(blocked: boolean, playingApp: string): void {
-    if (blocked) {
-      this.bot.statuses[EBotStatuses.BLOCKED] = true;
-    }
+    this.bot.statuses[EBotStatuses.BLOCKED] = blocked;
     this.bot.emit(EBotEvents.PLAYING_STATE, blocked, playingApp);
   }
 
   public onWebSession(_sessionId: unknown, cookies: object[]): void {
     this.bot.manager.setCookies(cookies, this.bot.controllers.manager.onSetCookies);
     this.bot.community.setCookies(cookies);
-    const [time, confKey, allowKey] = this.bot.totp.getConfirmationKeys();
-    this.bot.community.acceptAllConfirmations(
-      time,
-      confKey,
-      allowKey,
-      this.bot.controllers.community.onConfirmations,
-    );
+    try {
+      const [time, confKey, allowKey] = this.bot.totp.getConfirmationKeys();
+      this.bot.community.acceptAllConfirmations(
+        time,
+        confKey,
+        allowKey,
+        this.bot.controllers.community.onConfirmations,
+      );
+    } catch (error) {
+      this.bot.emit(EBotEvents.ERROR, error);
+    }
   }
 
   public onSteamGuard(_domain: unknown, callback: (code: string) => void): void {
@@ -67,6 +69,7 @@ export class SteamUserController {
       }
       this.bot.client.getPersonas([config.bot.steamId], this.onGetPersonas);
     }, SteamUserController.USER_TIMEOUT);
+    this.bot.statuses[EBotStatuses.DISCONNECTED] = false;
     this.bot.emit(EBotEvents.LOGIN);
   }
 

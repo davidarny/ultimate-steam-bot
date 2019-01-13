@@ -6,6 +6,10 @@
   "author": "David Arutiunian",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=10.15",
+    "yarn": ">=1.12"
+  },
   "dependencies": {
     "@types/body-parser": "^1.17.0",
     "@types/bunyan": "^1.8.5",
@@ -44,13 +48,13 @@
   },
   "scripts": {
     "start": "yarn run serve",
-    "build": "npm run tslint && tsc",
+    "build": "yarn run tslint && tsc",
     "serve": "node -r dotenv/config dist/index.js | bunyan",
     "watch-node": "cross-env NODE_ENV=development nodemon dist/index.js | bunyan",
     "watch-ts": "tsc -w",
-    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "tslint": "tslint -p tsconfig.json",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"yarn run watch-ts\" \"yarn run watch-node\"",
-    "test": "cross-env NODE_ENV=test jest --forceExit --verbose=false --detectOpenHandles",
+    "test": "cross-env NODE_ENV=test jest --forceExit --verbose=false --detectOpenHandles --runInBand",
     "coverage": "yarn run test --coverage",
     "watch-test": "yarn run test --watchAll"
   },

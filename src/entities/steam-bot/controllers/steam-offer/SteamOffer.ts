@@ -61,9 +61,11 @@ export class SteamOfferController {
       classid: _.get(item, 'classid'),
       market_hash_name: _.get(item, 'market_hash_name'),
       link:
-        _.get(item, 'actions') && _.first(_.get(item, 'actions'))
-          ? _.first<string>(_.get(item, 'actions'))!
-              .replace('%owner_steamid%', config.bot.steamId)
+        _.get(item, 'actions') &&
+        _.first(_.get(item, 'actions')) &&
+        _.has(_.first(_.get(item, 'actions')), 'link')
+          ? _.first<{ link: string }>(_.get(item, 'actions'))!
+              .link.replace('%owner_steamid%', config.bot.steamId)
               .replace('%assetid%', _.get(item, 'assetid'))
           : '',
     };
