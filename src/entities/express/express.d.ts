@@ -10,6 +10,7 @@ declare global {
         body: {
           bot_id: number;
           gameID: number;
+          steam_id: string;
         };
         params: {
           object: string;

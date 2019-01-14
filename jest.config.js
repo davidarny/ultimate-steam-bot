@@ -6,6 +6,7 @@ module.exports = {
   moduleNameMapper: {
     '^@app(.*)$': '<rootDir>/src/app$1',
     '^@config(.*)$': '<rootDir>/src/config$1',
+    '^@middlewares(.*)$': '<rootDir>/src/middlewares$1',
     '^@utils(.*)$': '<rootDir>/src/utils$1',
     '^@entities(.*)$': '<rootDir>/src/entities$1',
     '^@controllers(.*)$': '<rootDir>/src/controllers$1',

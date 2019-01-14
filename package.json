@@ -88,6 +88,7 @@
     "@services": "dist/services",
     "@routes": "dist/routes",
     "@app": "dist/app",
-    "@config": "dist/config"
+    "@config": "dist/config",
+    "@middlewares": "dist/middlewares"
   }
 }

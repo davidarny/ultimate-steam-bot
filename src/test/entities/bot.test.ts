@@ -18,8 +18,6 @@ describe('Bot', () => {
   };
   bot.on(EBotEvents.ERROR, console.error.bind(console));
 
-  beforeAll(async () => sleep(15000), 20000);
-
   it('should login', async () => expect(mocks[EBotEvents.LOGIN]).to.be.fulfilled);
 
   it('should set cookies', async () => expect(mocks[EBotEvents.SET_COOKIES]).to.be.fulfilled);
@@ -70,8 +68,4 @@ describe('Bot', () => {
 
 function getMockPromise(event: EBotEvents, bot: SteamBot) {
   return new Promise(resolve => bot.on(event, resolve));
-}
-
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
