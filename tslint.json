@@ -19,5 +19,6 @@
     "no-var-requires": false,
     "variable-name": false,
     "prefer-array-literal": [true, { "allow-type-parameters": true }]
-  }
+  },
+  "defaultSeverity": "warning"
 }

@@ -1,4 +1,3 @@
-require('module-alias/register');
 import ENodeEnv from '@entities/node-env';
 import SteamBot, { EBotEvents } from '@entities/steam-bot';
 import logger from '@utils/logger';

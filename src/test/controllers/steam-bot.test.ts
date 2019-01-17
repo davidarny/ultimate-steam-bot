@@ -8,14 +8,23 @@ import request from 'supertest';
 chai.use(cap);
 const expect = chai.expect;
 
-describe('GET /inventory', async () => {
-  const bot = SteamBot.getInstance();
-  const mocks = { [EBotEvents.SET_COOKIES]: getMockPromise(EBotEvents.LOGIN, bot) };
-  bot.on(EBotEvents.ERROR, console.error.bind(console));
+describe('GET /inventory', () => {
+  let bot: SteamBot;
+  let client: request.SuperTest<request.Test>;
+  let mocks: { [K in EBotEvents]?: Promise<{}> };
+
+  before(() => {
+    bot = SteamBot.getInstance();
+    client = request(app);
+    mocks = {
+      [EBotEvents.SET_COOKIES]: getMockPromise(EBotEvents.LOGIN, bot),
+    };
+    bot.on(EBotEvents.ERROR, console.error.bind(console));
+  });
 
   it('should get my inventory', async () => {
     await expect(mocks[EBotEvents.SET_COOKIES]).to.be.fulfilled;
-    const response = await request(app)
+    const response = await client
       .post('/inventory/my')
       .send({ gameID: config.app.game })
       .expect(200);
@@ -28,7 +37,7 @@ describe('GET /inventory', async () => {
 
   it('should get their inventory', async () => {
     await expect(mocks[EBotEvents.SET_COOKIES]).to.be.fulfilled;
-    const response = await request(app)
+    const response = await client
       .post('/inventory/their')
       .send({ gameID: config.app.game, steam_id: config.bot.steamId })
       .expect(200);

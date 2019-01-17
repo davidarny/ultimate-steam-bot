@@ -9,14 +9,19 @@ const expect = chai.expect;
 type TSteamBotStatus = { [K in EBotEvents]: string };
 
 describe('Bot', () => {
-  const bot = SteamBot.getInstance();
-  const mocks = {
-    [EBotEvents.LOGIN]: getMockPromise(EBotEvents.LOGIN, bot),
-    [EBotEvents.SET_COOKIES]: getMockPromise(EBotEvents.SET_COOKIES, bot),
-    [EBotEvents.USER]: getMockPromise(EBotEvents.USER, bot),
-    [EBotEvents.GC_CONNECTED]: getMockPromise(EBotEvents.GC_CONNECTED, bot),
-  };
-  bot.on(EBotEvents.ERROR, console.error.bind(console));
+  let bot: SteamBot;
+  let mocks: { [K in EBotEvents]?: Promise<{}> };
+
+  before(() => {
+    bot = SteamBot.getInstance();
+    mocks = {
+      [EBotEvents.LOGIN]: getMockPromise(EBotEvents.LOGIN, bot),
+      [EBotEvents.SET_COOKIES]: getMockPromise(EBotEvents.SET_COOKIES, bot),
+      [EBotEvents.USER]: getMockPromise(EBotEvents.USER, bot),
+      [EBotEvents.GC_CONNECTED]: getMockPromise(EBotEvents.GC_CONNECTED, bot),
+    };
+    bot.on(EBotEvents.ERROR, console.error.bind(console));
+  });
 
   it('should login', async () => expect(mocks[EBotEvents.LOGIN]).to.be.fulfilled);
 
@@ -31,10 +36,10 @@ describe('Bot', () => {
     const user = _.get(personas, sid!);
     expect(user).to.have.property('persona_state', 1);
     expect(user).to.have.property('game_played_app_id', config.app.game);
-  }, 10000);
+  });
 
-  it('should get bot status `EBotStatus.WEB_SESSION`', (done: jest.DoneCallback) => {
-    bot.on(EBotEvents.HEALTHCHECK, (statuses: TSteamBotStatus) => {
+  it('should get bot status `EBotStatus.WEB_SESSION`', (done: MochaDone) => {
+    const callback = _.once((statuses: TSteamBotStatus) => {
       if (statuses[EBotStatuses.WEB_SESSION]) {
         return done();
       }
@@ -44,15 +49,15 @@ describe('Bot', () => {
         done(new Error('Non of statuses matched'));
       }
     });
-    bot.on(EBotEvents.ERROR, error => done(error));
+    bot.on(EBotEvents.HEALTHCHECK, callback);
+    bot.on(EBotEvents.ERROR, (error: Error) => done(error));
   });
 
-  it('should connect to Game Coordinator', async () => {
-    await expect(mocks[EBotEvents.GC_CONNECTED]).to.be.fulfilled;
-  });
+  it('should connect to Game Coordinator', async () =>
+    expect(mocks[EBotEvents.GC_CONNECTED]).to.be.fulfilled);
 
-  it('should get bot status `EBotStatus.GC_CONNECTED`', (done: jest.DoneCallback) => {
-    bot.on(EBotEvents.HEALTHCHECK, (statuses: TSteamBotStatus) => {
+  it('should get bot status `EBotStatus.GC_CONNECTED`', (done: MochaDone) => {
+    const callback = _.once((statuses: TSteamBotStatus) => {
       if (statuses[EBotStatuses.GC_CONNECTED]) {
         return done();
       }
@@ -62,7 +67,8 @@ describe('Bot', () => {
         done(new Error('Non of statuses matched'));
       }
     });
-    bot.on(EBotEvents.ERROR, error => done(error));
+    bot.on(EBotEvents.HEALTHCHECK, callback);
+    bot.on(EBotEvents.ERROR, (error: any) => done(error));
   });
 });
 

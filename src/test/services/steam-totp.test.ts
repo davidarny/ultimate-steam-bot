@@ -4,7 +4,9 @@ import chai from 'chai';
 const expect = chai.expect;
 
 describe('SteamTotp', () => {
-  const totp = new SteamTotp();
+  let totp: SteamTotp;
+
+  before(() => (totp = new SteamTotp()));
 
   it('should get auth code', () => {
     const code = totp.getAuthCode(config.bot.sharedSecret!);
