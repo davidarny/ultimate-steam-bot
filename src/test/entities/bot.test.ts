@@ -1,5 +1,6 @@
 import config from '@config';
-import SteamBot, { EBotEvents, EBotStatuses } from '@entities/steam-bot';
+import { EBotEvents, EBotStatuses } from '@entities/steam-bot';
+import * as Mocks from '@mocks';
 import chai from 'chai';
 import cap from 'chai-as-promised';
 import _ from 'lodash';
@@ -9,19 +10,8 @@ const expect = chai.expect;
 type TSteamBotStatus = { [K in EBotEvents]: string };
 
 describe('Bot', () => {
-  let bot: SteamBot;
-  let mocks: { [K in EBotEvents]?: Promise<{}> };
-
-  before(() => {
-    bot = SteamBot.getInstance();
-    mocks = {
-      [EBotEvents.LOGIN]: getMockPromise(EBotEvents.LOGIN, bot),
-      [EBotEvents.SET_COOKIES]: getMockPromise(EBotEvents.SET_COOKIES, bot),
-      [EBotEvents.USER]: getMockPromise(EBotEvents.USER, bot),
-      [EBotEvents.GC_CONNECTED]: getMockPromise(EBotEvents.GC_CONNECTED, bot),
-    };
-    bot.on(EBotEvents.ERROR, console.error.bind(console));
-  });
+  const bot = Mocks.getBotMock();
+  const mocks = Mocks.getBotMockEvents();
 
   it('should login', async () => expect(mocks[EBotEvents.LOGIN]).to.be.fulfilled);
 
@@ -71,7 +61,3 @@ describe('Bot', () => {
     bot.on(EBotEvents.ERROR, (error: any) => done(error));
   });
 });
-
-function getMockPromise(event: EBotEvents, bot: SteamBot) {
-  return new Promise(resolve => bot.on(event, resolve));
-}

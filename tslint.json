@@ -18,7 +18,8 @@
     "ter-arrow-parens": false,
     "no-var-requires": false,
     "variable-name": false,
-    "prefer-array-literal": [true, { "allow-type-parameters": true }]
+    "prefer-array-literal": [true, { "allow-type-parameters": true }],
+    "space-before-function-paren": [true, { "anonymous": "never" }]
   },
   "defaultSeverity": "warning"
 }
