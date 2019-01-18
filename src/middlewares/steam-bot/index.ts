@@ -1,1 +1,1 @@
-export * from './SteamBot';
+export * from './steam-bot';

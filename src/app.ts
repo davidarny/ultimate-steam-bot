@@ -25,7 +25,7 @@ if (!isTestEnv) {
   app.use(ebl());
 }
 
-app.use(middlewares.initContext());
+app.use(middlewares.initContext(), middlewares.checkBotStatus());
 
 app.use('/healthcheck', routes.healthcheck());
 app.use(routes.bot());

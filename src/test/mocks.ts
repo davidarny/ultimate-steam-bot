@@ -27,3 +27,7 @@ export function getBotMock(): SteamBot {
 export function getClientMock(): request.SuperTest<request.Test> {
   return client;
 }
+
+export function sleep(timeout: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}

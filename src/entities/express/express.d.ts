@@ -11,6 +11,7 @@ declare global {
           bot_id: number;
           gameID: number;
           steam_id: string;
+          asset_ids: string[];
         };
         params: {
           object: string;

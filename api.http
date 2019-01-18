@@ -1,3 +1,5 @@
+###
+
 GET http://localhost:3000/healthcheck
 
 ###
@@ -16,6 +18,18 @@ Content-Type: application/json
 
 {
   "gameID": 730,
+  "steam_id": "<steam_id>"
+}
+
+###
+
+POST http://localhost:3000/inventory/check
+Content-Type: application/json
+
+{
+  "gameID": 730,
+  "bot_id": 0,
+  "asset_ids": [],
   "steam_id": "<steam_id>"
 }
 
