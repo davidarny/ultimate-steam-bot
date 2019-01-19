@@ -34,3 +34,12 @@ Content-Type: application/json
 }
 
 ###
+
+POST http://localhost:3000/inventory/getcsgoitemsinfo
+Content-Type: application/json
+
+{
+  "links": []
+}
+
+###

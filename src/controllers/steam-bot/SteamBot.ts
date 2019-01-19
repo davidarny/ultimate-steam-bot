@@ -70,6 +70,27 @@ export function check() {
   };
 }
 
+export function getItemsInfo() {
+  return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const items: object[] = [];
+    const links = req.ctx.body.links;
+    const promises = links.map(() => req.ctx.bot.getItemInfo);
+    let index = 0;
+    for (const promise of promises) {
+      const link = _.nth(links, index);
+      if (!link) {
+        index += 1;
+        continue;
+      }
+      const item = await promise(link);
+      items.push(item);
+      index += 1;
+    }
+    res.json(new ApiResponse({ data: items }).get());
+    return next();
+  };
+}
+
 function sendErrorResponse(res: express.Response, error: Error) {
   res.json(new ApiResponse({ error: new Error(error.message) }).get());
 }

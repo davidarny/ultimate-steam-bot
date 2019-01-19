@@ -12,6 +12,7 @@ declare global {
           gameID: number;
           steam_id: string;
           asset_ids: string[];
+          links: string[];
         };
         params: {
           object: string;

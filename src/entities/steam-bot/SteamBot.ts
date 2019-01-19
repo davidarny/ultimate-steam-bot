@@ -11,6 +11,7 @@ import { ENVIRONMENT } from '@utils/secrets';
 import { autobind } from 'core-decorators';
 import { EventEmitter } from 'events';
 import GlobalOffensive from 'globaloffensive';
+import _ from 'lodash';
 import TradeOfferManager from 'steam-tradeoffer-manager';
 import SteamUser from 'steam-user';
 import SteamCommunity from 'steamcommunity';
@@ -106,6 +107,16 @@ export class SteamBot extends EventEmitter {
         twoFactorCode: tfa,
       });
     }
+  }
+
+  public async getItemInfo(link: string): Promise<object> {
+    return new Promise((resolve, reject) => {
+      const match = link.match(/[SM](\d+)A(\d+)D(\d+)$/);
+      if (!match) {
+        return reject(new Error('Item link is corrupted!'));
+      }
+      this.coordinator.inspectItem(_.nth(match, 1)!, _.nth(match, 2)!, _.nth(match, 3)!, resolve);
+    });
   }
 
   private init(): void {

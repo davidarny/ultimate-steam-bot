@@ -64,3 +64,18 @@ export function checkAssetsIds() {
     return next();
   };
 }
+
+export function checkItemsLinks() {
+  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (_.isNil(req.ctx.body.links)) {
+      return res.json(new ApiResponse({ error: new Error('"links" field is missing') }).get());
+    }
+    if (!_.isArray(req.ctx.body.links)) {
+      return res.json(new ApiResponse({ error: new Error('"links" should be an array') }).get());
+    }
+    if (_.isEmpty(req.ctx.body.links)) {
+      return res.json(new ApiResponse({ error: new Error('"links" should not be empty') }).get());
+    }
+    return next();
+  };
+}

@@ -28,5 +28,11 @@ export default () => {
     middlewares.withTryCatch(controllers.bot.check()),
   );
 
+  router.all(
+    '/inventory/getcsgoitemsinfo',
+    middlewares.checkItemsLinks(),
+    middlewares.withTryCatch(controllers.bot.getItemsInfo()),
+  );
+
   return router;
 };
