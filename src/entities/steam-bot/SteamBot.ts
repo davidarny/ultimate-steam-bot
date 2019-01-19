@@ -4,8 +4,11 @@ import ENodeEnv from '@entities/node-env';
 import { ETradeOfferEvents } from '@entities/steam-tradeoffer-manager';
 import { ESteamUserEvents } from '@entities/steam-user';
 import { ESteamCommunityEvents } from '@entities/steamcommunity';
+import Cron from '@services/cron';
+import PriceService from '@services/price';
 import SteamTotp from '@services/steam-totp';
 import { ENVIRONMENT } from '@utils/secrets';
+import { autobind } from 'core-decorators';
 import { EventEmitter } from 'events';
 import GlobalOffensive from 'globaloffensive';
 import TradeOfferManager from 'steam-tradeoffer-manager';
@@ -29,7 +32,8 @@ export class SteamBot extends EventEmitter {
 
   private static instance: SteamBot;
   // Timers
-  private static readonly HEALTHCHECK_INTERVAL = ENVIRONMENT === ENodeEnv.TEST ? 1000 : 15000;
+  private static readonly HEALTHCHECK_CRON =
+    ENVIRONMENT === ENodeEnv.TEST ? '* * * * * *' : '*/15 * * * * *';
   // Flags
   public statuses = {
     [EBotStatuses.WEB_SESSION]: false,
@@ -59,11 +63,15 @@ export class SteamBot extends EventEmitter {
     offer: new OfferController(this),
     coordinator: new GlobalOffensiveController(this),
   };
+  // Healthcheck CRON
+  private readonly cron = new Cron(SteamBot.HEALTHCHECK_CRON, this.healthcheck);
+  private readonly price = new PriceService();
 
   private constructor() {
     super();
     this.init();
-    this.healthcheck();
+    this.cron.start();
+    this.price.start();
   }
 
   public getInventory(
@@ -128,11 +136,8 @@ export class SteamBot extends EventEmitter {
     );
   }
 
+  @autobind
   private healthcheck(): void {
     this.emit(EBotEvents.HEALTHCHECK, this.statuses);
-    setInterval(
-      () => this.emit(EBotEvents.HEALTHCHECK, this.statuses),
-      SteamBot.HEALTHCHECK_INTERVAL,
-    );
   }
 }

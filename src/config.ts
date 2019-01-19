@@ -7,6 +7,7 @@ export default {
     webhookUrl: Secrets.WEBHOOK_URL,
     sentOfferChangedUrl: Secrets.SENT_OFFER_CHANGED_URL,
     moneyboxTradeUrl: Secrets.MONEYBOX_TRADE_URL,
+    requestPriceUrl: Secrets.REQUEST_PRICE_URL,
     acceptOfferMaxAttempts: Secrets.ACCEPT_OFFER_MAX_ATTEMPTS,
     noType: Secrets.NO_TYPE,
     trustTradeList: Secrets.TRUST_TRADE_LIST,

@@ -1,11 +1,10 @@
 import config from '@config';
 import State from '@entities/state';
+import RedisProvider from '@providers/redis';
 import logger from '@utils/logger';
 import * as ServerSanitizer from '@utils/sanitizer/server';
 import _ from 'lodash';
-import redis from 'redis';
 
-const RedisClient = redis.createClient();
 export type TCheckMethodState = State<{
   items: object[];
   assetId: string;
@@ -24,7 +23,7 @@ export function processAssetId(state: TCheckMethodState, callback: (code: number
         callback(1003);
         return _.get(item, 'assetid') === state.get('assetId');
       }
-      RedisClient.get(_.get(item, 'market_hash_name'), (error, reply) =>
+      RedisProvider.getInstance().get(_.get(item, 'market_hash_name'), (error, reply) =>
         processMarketItem(error, reply, state, callback),
       );
     }
@@ -49,7 +48,7 @@ export function processMarketItem(
     return;
   }
   const cost = _.isNaN(parseFloat(reply)) ? 0 : parseFloat(reply);
-  if (reply === 'n' || cost < config.app.acceptableItemCost) {
+  if (cost < config.app.acceptableItemCost) {
     state.set('isCostValid', false);
     callback(1002);
   }

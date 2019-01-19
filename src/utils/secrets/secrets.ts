@@ -25,3 +25,4 @@ export const ACCEPTABLE_AMOUNT_COST = parseInt(process.env.ACCEPTABLE_AMOUNT_COS
 export const CREATE_CANCEL_TIME = parseInt(process.env.CREATE_CANCEL_TIME!, 10) || 100;
 export const JOIN_CANCEL_TIME = parseInt(process.env.JOIN_CANCEL_TIME!, 10) || 50;
 export const PRIZE_CANCEL_TIME = parseInt(process.env.PRIZE_CANCEL_TIME!, 10) || 120;
+export const REQUEST_PRICE_URL = process.env.REQUEST_PRICE_URL;
