@@ -74,7 +74,8 @@ export function getItemsInfo() {
   return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const items: object[] = [];
     const links = req.ctx.body.links;
-    const promises = links.map(() => req.ctx.bot.getItemInfo);
+    const bot = req.ctx.bot;
+    const promises = links.map(() => bot.getItemInfo.bind(bot));
     let index = 0;
     for (const promise of promises) {
       const link = _.nth(links, index);

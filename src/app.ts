@@ -6,14 +6,17 @@ import compression from 'compression';
 import errorhandler from 'errorhandler';
 import express from 'express';
 import ebl from 'express-bunyan-logger';
+import RateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import * as middlewares from './middlewares';
 
 const app = express();
+const limiter = new RateLimit({ windowMs: 1000, max: 5 });
 const isTestEnv = config.app.env === ENodeEnv.TEST;
 const isDevEnv = config.app.env === ENodeEnv.DEVELOPMENT;
 
 app.set('port', config.app.port);
+app.use(limiter);
 app.use(compression());
 app.use(helmet());
 app.use(bodyparser.json());
