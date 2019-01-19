@@ -21,4 +21,8 @@ export class Redis {
   public set(key: string, value: string, cb?: redis.Callback<'OK'>): boolean {
     return this.client.set(key, value, cb);
   }
+
+  public async flush(): Promise<void> {
+    return new Promise(resolve => this.client.flushdb(() => resolve()));
+  }
 }

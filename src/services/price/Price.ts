@@ -21,11 +21,27 @@ interface ISteamPriceItem {
 
 export class Price {
   private static readonly PRICE_POLL_CRON =
-    ENVIRONMENT === ENodeEnv.TEST ? '*/5 * * * *' : '* */15 * * * *';
-  private readonly cron = new Cron(Price.PRICE_POLL_CRON, this.poll);
+    ENVIRONMENT === ENodeEnv.TEST ? '*/5 * * * * *' : '* */15 * * * *';
+  private static readonly FLUSH_CRON =
+    ENVIRONMENT === ENodeEnv.TEST ? '*/10 * * * * *' : '0 0 1 * * *';
+  private readonly crons = {
+    poll: new Cron(Price.PRICE_POLL_CRON, this.poll),
+    flush: new Cron(Price.FLUSH_CRON, this.flush),
+  };
 
   public start(): void {
-    this.cron.start();
+    this.crons.poll.start();
+    this.crons.flush.start();
+  }
+
+  public stop(): void {
+    this.crons.poll.stop();
+    this.crons.flush.stop();
+  }
+
+  @autobind
+  private async flush(): Promise<void> {
+    await RedisProvider.getInstance().flush();
   }
 
   @autobind
