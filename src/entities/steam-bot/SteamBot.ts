@@ -35,7 +35,7 @@ export class SteamBot extends EventEmitter {
   private static instance: SteamBot;
   // Timers
   private static readonly HEALTHCHECK_CRON =
-    ENVIRONMENT === ENodeEnv.TEST ? '* * * * * *' : '*/15 * * * * *';
+    ENVIRONMENT === ENodeEnv.TEST ? '* * * * * *' : '0 0 */1 * * *';
   // Flags
   public statuses = {
     [EBotStatuses.WEB_SESSION]: false,

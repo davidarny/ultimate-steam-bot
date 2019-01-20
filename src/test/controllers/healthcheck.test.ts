@@ -11,6 +11,10 @@ describe('Healthcheck API', async () => {
   it('should return 200 OK', async () => {
     await expect(mocks[EBotEvents.SET_COOKIES]).to.be.fulfilled;
     const response = await client.get('/healthcheck').expect(200);
-    expect(response.text).to.equal('I am alive!');
+    expect(response.body).to.have.property('WEB_SESSION');
+    expect(response.body).to.have.property('BLOCKED');
+    expect(response.body).to.have.property('DISCONNECTED');
+    expect(response.body).to.have.property('GC_CONNECTED');
+    expect(response.body).to.have.property('SESSION_EXPIRED');
   });
 });
