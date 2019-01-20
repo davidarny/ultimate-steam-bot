@@ -29,9 +29,10 @@ describe('Steam Bot REST API', () => {
     expect(response.body).to.have.property('success', true);
     expect(response.body)
       .to.have.property('data')
+      .to.have.property('items')
       .to.be.an('array');
-    expect(response.body.data).to.be.not.empty;
-    const ids = response.body.data.map(item => _.get(item, 'assetid'));
+    expect(response.body.data.items).to.be.not.empty;
+    const ids = response.body.data.items.map(item => _.get(item, 'assetid'));
     _.range(0, _.random(0, ids.length)).forEach(() => state.get('assets').push(_.sample(ids)));
   });
 
@@ -49,8 +50,9 @@ describe('Steam Bot REST API', () => {
     expect(response.body).to.have.property('success', true);
     expect(response.body)
       .to.have.property('data')
+      .to.have.property('items')
       .to.be.an('array');
-    expect(response.body.data).to.be.not.empty;
+    expect(response.body.data.items).to.be.not.empty;
   });
 
   it('should check my inventory', async () => {

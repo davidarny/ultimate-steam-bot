@@ -15,7 +15,7 @@ export function my() {
     try {
       const [items] = await req.ctx.bot.getInventory(req.ctx.body.gameID, null);
       const nextItems = items.map(SteamBotService.getNextMyItem);
-      res.json(new ApiResponse({ data: nextItems }).get());
+      res.json(new ApiResponse({ data: { items: nextItems } }).get());
       return next();
     } catch (error) {
       res.json(new ApiResponse({ error: new Error(error.message) }).get());
@@ -34,7 +34,7 @@ export function their() {
         config.app.noType.every((value: object) => _.get(item, 'type').indexOf(value) === -1),
       );
       const nextItems = itemsFilteredByType.map(SteamBotService.getNextTheirItem);
-      res.json(new ApiResponse({ data: nextItems }).get());
+      res.json(new ApiResponse({ data: { items: nextItems } }).get());
       return next();
     } catch (error) {
       res.json(new ApiResponse({ error: new Error(error.message) }).get());
