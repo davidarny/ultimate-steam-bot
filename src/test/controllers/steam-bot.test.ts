@@ -18,9 +18,13 @@ describe('GET /inventory', () => {
   beforeEach(async () => Mocks.sleep(1000));
 
   it('should get my inventory', async () => {
+    const payload = {
+      gameID: config.app.game,
+      bot_id: config.bot.botId,
+    };
     const response = await client
       .post('/inventory/my')
-      .send({ gameID: config.app.game })
+      .send(payload)
       .expect(200);
     expect(response.body).to.have.property('success', true);
     expect(response.body)
@@ -33,9 +37,14 @@ describe('GET /inventory', () => {
 
   it('should get their inventory', async () => {
     await expect(mocks[EBotEvents.SET_COOKIES]).to.be.fulfilled;
+    const payload = {
+      gameID: config.app.game,
+      steam_id: config.bot.steamId,
+      bot_id: config.bot.botId,
+    };
     const response = await client
       .post('/inventory/their')
-      .send({ gameID: config.app.game, steam_id: config.bot.steamId })
+      .send(payload)
       .expect(200);
     expect(response.body).to.have.property('success', true);
     expect(response.body)

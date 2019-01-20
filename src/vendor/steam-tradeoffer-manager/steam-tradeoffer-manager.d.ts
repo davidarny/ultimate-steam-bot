@@ -2,7 +2,7 @@ import { ITradeOffer } from '@entities/steam-tradeoffer-manager';
 
 declare module 'steam-tradeoffer-manager' {
   export default class TradeOfferManager {
-    public static readonly ETradeState: ITradeStateKeys;
+    public static readonly ETradeOfferState: ITradeStateKeys;
     /**
      * A read-only property containing your account's API key once
      * the callback of `setCookies` fires for the first time.
@@ -26,5 +26,7 @@ declare module 'steam-tradeoffer-manager' {
       event: 'sentOfferChanged',
       callback: (offer: ITradeOffer, oldState: ETradeState) => void,
     ): void;
+
+    public createOffer(partner: string): ITradeOffer;
   }
 }

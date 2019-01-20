@@ -115,3 +115,11 @@ export function getNextTheirItem(item: object): object | undefined {
         : '',
   };
 }
+
+export function getGiveOfferItem(item: object): object {
+  return {
+    assetid: _.get(item, 'assetid'),
+    appid: _.get(item, 'appid'),
+    contextid: 2,
+  };
+}

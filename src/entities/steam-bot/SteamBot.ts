@@ -4,9 +4,10 @@ import ENodeEnv from '@entities/node-env';
 import { ETradeOfferEvents } from '@entities/steam-tradeoffer-manager';
 import { ESteamUserEvents } from '@entities/steam-user';
 import { ESteamCommunityEvents } from '@entities/steamcommunity';
-import Cron from '@services/cron';
+import CronService from '@services/cron';
 import PriceService from '@services/price';
-import SteamTotp from '@services/steam-totp';
+import * as SteamBotService from '@services/steam-bot';
+import SteamTotpService from '@services/steam-totp';
 import { ENVIRONMENT } from '@utils/secrets';
 import { autobind } from 'core-decorators';
 import { EventEmitter } from 'events';
@@ -45,7 +46,7 @@ export class SteamBot extends EventEmitter {
   };
   // Vendor libs
   public readonly client = new SteamUser();
-  public readonly totp = new SteamTotp();
+  public readonly totp = new SteamTotpService();
   public readonly community = new SteamCommunity();
   public readonly coordinator = new GlobalOffensive(this.client);
   public readonly manager = new TradeOfferManager({
@@ -65,7 +66,7 @@ export class SteamBot extends EventEmitter {
     coordinator: new GlobalOffensiveController(this),
   };
   // Healthcheck CRON
-  private readonly cron = new Cron(SteamBot.HEALTHCHECK_CRON, this.healthcheck);
+  private readonly cron = new CronService(SteamBot.HEALTHCHECK_CRON, this.healthcheck);
   private readonly price = new PriceService();
 
   private constructor() {
@@ -75,13 +76,26 @@ export class SteamBot extends EventEmitter {
     this.price.start();
   }
 
-  public getInventory(
+  public async getInventory(
     gameId: number,
     steamId: string | null,
-    callback: (error: Error | null, items: object[]) => void,
-  ): void {
-    const userSteamId = steamId || this.client.steamID;
-    this.community.getUserInventoryContents(userSteamId, gameId, 2, false, 'english', callback);
+  ): Promise<[object[], object[], number]> {
+    return new Promise((resolve, reject) => {
+      const userSteamId = steamId || this.client.steamID;
+      this.community.getUserInventoryContents(
+        userSteamId,
+        gameId,
+        2,
+        false,
+        'english',
+        (error, ...rest) => {
+          if (error) {
+            return reject(error);
+          }
+          resolve(rest);
+        },
+      );
+    });
   }
 
   public login(): void {
@@ -117,6 +131,45 @@ export class SteamBot extends EventEmitter {
       }
       this.coordinator.inspectItem(_.nth(match, 1)!, _.nth(match, 2)!, _.nth(match, 3)!, resolve);
     });
+  }
+
+  public async sendGiveOffer(
+    tradeUrl: string,
+    items: object[],
+    message: string,
+    cancelTime: number,
+  ): Promise<[string, string]> {
+    return new Promise((resolve, reject) => {
+      const offer = this.manager.createOffer(tradeUrl);
+      offer.getUserDetails((error, _me, them) => {
+        if (error) {
+          return reject(error);
+        }
+        if (them.escrowDays === null || them.escrowDays > 0) {
+          return reject(new Error("Partner doesn't have mobile authenticator"));
+        }
+        const itemsToGet = items.map(SteamBotService.getGiveOfferItem);
+        offer.addMyItems(itemsToGet);
+        offer.setMessage(message);
+        // tslint:disable-next-line:no-shadowed-variable
+        offer.send((error, status) => {
+          if (error) {
+            return reject(error);
+          }
+          offer.data('cancelTime', cancelTime);
+          return resolve([offer.id, this.getTradeStatus(status)]);
+        });
+      });
+    });
+  }
+
+  private getTradeStatus(status: string) {
+    const statuses = {
+      sent: TradeOfferManager.ETradeOfferState.Active,
+      pending: TradeOfferManager.ETradeOfferState.CreatedNeedsConfirmation,
+      default: TradeOfferManager.ETradeOfferState.Invalid,
+    };
+    return _.get(statuses, status, statuses.default);
   }
 
   private init(): void {

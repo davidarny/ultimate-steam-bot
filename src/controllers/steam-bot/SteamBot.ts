@@ -5,27 +5,26 @@ import * as SteamBotService from '@services/steam-bot';
 import express from 'express';
 import _ from 'lodash';
 
+const OFFER_CANCEL_TIME = 120_000;
+
 export function my() {
-  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    req.ctx.bot.getInventory(req.ctx.body.gameID, null, (error, items) => {
-      if (error) {
-        sendErrorResponse(res, error);
-        return next();
-      }
+  return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+      const [items] = await req.ctx.bot.getInventory(req.ctx.body.gameID, null);
       const nextItems = items.map(SteamBotService.getNextMyItem);
       res.json(new ApiResponse({ data: nextItems }).get());
       return next();
-    });
+    } catch (error) {
+      sendErrorResponse(res, error);
+      return next();
+    }
   };
 }
 
 export function their() {
-  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    req.ctx.bot.getInventory(req.ctx.body.gameID, req.ctx.body.steam_id, (error, items) => {
-      if (error) {
-        sendErrorResponse(res, error);
-        return next();
-      }
+  return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+      const [items] = await req.ctx.bot.getInventory(req.ctx.body.gameID, req.ctx.body.steam_id);
       const itemsFilteredByCost = items.filter(item => _.get(item, 'cost') !== 'n');
       // TODO: lack of typings, possible bugs
       const itemsFilteredByType = itemsFilteredByCost.filter(item =>
@@ -34,17 +33,17 @@ export function their() {
       const nextItems = itemsFilteredByType.map(SteamBotService.getNextTheirItem);
       res.json(new ApiResponse({ data: nextItems }).get());
       return next();
-    });
+    } catch (error) {
+      sendErrorResponse(res, error);
+      return next();
+    }
   };
 }
 
 export function check() {
-  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    req.ctx.bot.getInventory(req.ctx.body.gameID, req.ctx.body.steam_id, (error, items) => {
-      if (error) {
-        res.json(new ApiResponse({ data: { code: 1001 } }));
-        return next();
-      }
+  return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+      const [items] = await req.ctx.bot.getInventory(req.ctx.body.gameID, req.ctx.body.steam_id);
       const state: SteamBotService.TCheckMethodState = new State({
         items,
         assetId: '',
@@ -66,7 +65,10 @@ export function check() {
         state.merge({ assetId });
         SteamBotService.processAssetId(state, callback);
       }
-    });
+    } catch {
+      res.json(new ApiResponse({ data: { code: 1001 } }));
+      return next();
+    }
   };
 }
 
@@ -88,6 +90,19 @@ export function getItemsInfo() {
       index += 1;
     }
     res.json(new ApiResponse({ data: items }).get());
+    return next();
+  };
+}
+
+export function sendGiveOffer() {
+  return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const [offerId, status] = await req.ctx.bot.sendGiveOffer(
+      req.ctx.body.trade_url,
+      req.ctx.body.items,
+      req.ctx.body.comment,
+      OFFER_CANCEL_TIME,
+    );
+    res.json(new ApiResponse({ data: { offer_state: status, offer_id: offerId } }).get());
     return next();
   };
 }

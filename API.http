@@ -8,6 +8,7 @@ POST http://localhost:3000/inventory/my
 Content-Type: application/json
 
 {
+  "bot_id": 0,
   "gameID": 730
 }
 
@@ -17,6 +18,7 @@ POST http://localhost:3000/inventory/their
 Content-Type: application/json
 
 {
+  "bot_id": 0,
   "gameID": 730,
   "steam_id": "<steam_id>"
 }
@@ -27,8 +29,8 @@ POST http://localhost:3000/inventory/check
 Content-Type: application/json
 
 {
-  "gameID": 730,
   "bot_id": 0,
+  "gameID": 730,
   "asset_ids": [],
   "steam_id": "<steam_id>"
 }
@@ -39,7 +41,20 @@ POST http://localhost:3000/inventory/getcsgoitemsinfo
 Content-Type: application/json
 
 {
+  "bot_id": 0,
   "links": []
+}
+
+###
+
+POST http://localhost:3000/tradeoffer/sendgive
+Content-Type: application/json
+
+{
+  "bot_id": 0,
+  "trade_url": "",
+  "comment": "",
+  "items": []
 }
 
 ###

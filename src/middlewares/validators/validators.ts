@@ -79,3 +79,36 @@ export function checkItemsLinks() {
     return next();
   };
 }
+
+export function checkTradeUrl() {
+  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (!_.isNil(req.ctx.body.trade_url)) {
+      return next();
+    }
+    return res.json(new ApiResponse({ error: new Error('"trade_url" field is missing') }).get());
+  };
+}
+
+export function checkTradeComment() {
+  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (!_.isNil(req.ctx.body.comment)) {
+      return next();
+    }
+    return res.json(new ApiResponse({ error: new Error('"comment" field is missing') }).get());
+  };
+}
+
+export function checkTradeItems() {
+  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (_.isNil(req.ctx.body.items)) {
+      return res.json(new ApiResponse({ error: new Error('"items" field is missing') }).get());
+    }
+    if (!_.isArray(req.ctx.body.items)) {
+      return res.json(new ApiResponse({ error: new Error('"items" should be an array') }).get());
+    }
+    if (_.isEmpty(req.ctx.body.items)) {
+      return res.json(new ApiResponse({ error: new Error('"items" should not be empty') }).get());
+    }
+    return next();
+  };
+}

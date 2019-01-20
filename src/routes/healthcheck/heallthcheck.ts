@@ -4,7 +4,7 @@ import express from 'express';
 const router = express.Router();
 
 export default () => {
-  router.get('/', controllers.healthcheck.get());
+  router.get('/healthcheck', controllers.healthcheck.get());
 
   return router;
 };

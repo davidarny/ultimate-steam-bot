@@ -13,6 +13,12 @@ declare global {
           steam_id: string;
           asset_ids: string[];
           links: string[];
+          items: Array<{
+            assetid: string;
+            appid: number;
+          }>;
+          comment: string;
+          trade_url: string;
         };
         params: {
           object: string;

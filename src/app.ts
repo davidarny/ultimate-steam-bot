@@ -29,10 +29,8 @@ if (!isTestEnv) {
 }
 
 app.use(middlewares.initContext(), middlewares.checkBotStatus());
-
-app.use('/healthcheck', routes.healthcheck());
+app.use(routes.healthcheck());
 app.use(routes.bot());
-
 app.use(middlewares.sanitizeError());
 
 export default app;

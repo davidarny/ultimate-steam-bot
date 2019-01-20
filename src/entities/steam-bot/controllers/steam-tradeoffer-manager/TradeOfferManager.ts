@@ -8,7 +8,7 @@ export class TradeOfferManagerController {
   constructor(private readonly bot: SteamBot) {}
 
   public onSentOfferChanged(offer: ITradeOffer, _reason: unknown): void {
-    if (offer.state === TradeOfferManager.ETradeState.Accepted) {
+    if (offer.state === TradeOfferManager.ETradeOfferState.Accepted) {
       offer.getExchangeDetails((...args) =>
         this.bot.controllers.offer.onGetExchangeDetails(offer, ...args),
       );
