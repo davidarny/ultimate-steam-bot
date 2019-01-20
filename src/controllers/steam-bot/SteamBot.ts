@@ -15,7 +15,7 @@ export function my() {
       res.json(new ApiResponse({ data: nextItems }).get());
       return next();
     } catch (error) {
-      sendErrorResponse(res, error);
+      res.json(new ApiResponse({ error: new Error(error.message) }).get());
       return next();
     }
   };
@@ -34,7 +34,7 @@ export function their() {
       res.json(new ApiResponse({ data: nextItems }).get());
       return next();
     } catch (error) {
-      sendErrorResponse(res, error);
+      res.json(new ApiResponse({ error: new Error(error.message) }).get());
       return next();
     }
   };
@@ -96,7 +96,8 @@ export function getItemsInfo() {
 
 export function sendGiveOffer() {
   return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const [offerId, status] = await req.ctx.bot.sendGiveOffer(
+    const [offerId, status] = await req.ctx.bot.sendGetOrGiveOffer(
+      'give',
       req.ctx.body.trade_url,
       req.ctx.body.items,
       req.ctx.body.comment,
@@ -107,6 +108,17 @@ export function sendGiveOffer() {
   };
 }
 
-function sendErrorResponse(res: express.Response, error: Error) {
-  res.json(new ApiResponse({ error: new Error(error.message) }).get());
+export function sendGetOffer() {
+  return async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const [offerId, status] = await req.ctx.bot.sendGetOrGiveOffer(
+      'get',
+      req.ctx.body.trade_url,
+      req.ctx.body.items,
+      req.ctx.body.comment,
+      OFFER_CANCEL_TIME,
+      req.ctx.body.data,
+    );
+    res.json(new ApiResponse({ data: { offer_state: status, offer_id: offerId } }).get());
+    return next();
+  };
 }

@@ -58,3 +58,16 @@ Content-Type: application/json
 }
 
 ###
+
+POST http://localhost:3000/tradeoffer/sendget
+Content-Type: application/json
+
+{
+  "bot_id": 0,
+  "trade_url": "",
+  "comment": "",
+  "items": [],
+  "data": {}
+}
+
+###

@@ -133,14 +133,19 @@ export class SteamBot extends EventEmitter {
     });
   }
 
-  public async sendGiveOffer(
-    tradeUrl: string,
+  public async sendGetOrGiveOffer(
+    type: 'get' | 'give',
+    partner: string,
     items: object[],
     message: string,
-    cancelTime: number,
+    timeout: number,
+    data?: object,
   ): Promise<[string, string]> {
     return new Promise((resolve, reject) => {
-      const offer = this.manager.createOffer(tradeUrl);
+      const offer = this.manager.createOffer(partner);
+      if (type === 'get') {
+        offer.data('data', data);
+      }
       offer.getUserDetails((error, _me, them) => {
         if (error) {
           return reject(error);
@@ -149,14 +154,20 @@ export class SteamBot extends EventEmitter {
           return reject(new Error("Partner doesn't have mobile authenticator"));
         }
         const itemsToGet = items.map(SteamBotService.getGiveOfferItem);
-        offer.addMyItems(itemsToGet);
+        if (type === 'give') {
+          offer.addMyItems(itemsToGet);
+        } else if (type === 'get') {
+          offer.addTheirItems(itemsToGet);
+        } else {
+          return reject(new Error('Unsupported offer type!'));
+        }
         offer.setMessage(message);
         // tslint:disable-next-line:no-shadowed-variable
         offer.send((error, status) => {
           if (error) {
             return reject(error);
           }
-          offer.data('cancelTime', cancelTime);
+          offer.data('cancelTime', timeout);
           return resolve([offer.id, this.getTradeStatus(status)]);
         });
       });

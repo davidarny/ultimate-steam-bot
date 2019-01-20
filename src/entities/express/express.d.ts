@@ -19,6 +19,7 @@ declare global {
           }>;
           comment: string;
           trade_url: string;
+          data: object;
         };
         params: {
           object: string;

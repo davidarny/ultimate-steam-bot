@@ -38,6 +38,8 @@ export interface ITradeOffer {
 
   addMyItems(items: object[]): void;
 
+  addTheirItems(items: object[]): void;
+
   setMessage(message: string): void;
 
   send(callback: (error: Error | null, status: 'pending' | 'sent') => void): void;

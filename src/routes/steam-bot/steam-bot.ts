@@ -46,5 +46,14 @@ export default () => {
     middlewares.withTryCatch(controllers.bot.sendGiveOffer()),
   );
 
+  router.all(
+    '/tradeoffer/sendget',
+    middlewares.checkBotId(),
+    middlewares.checkTradeUrl(),
+    middlewares.checkTradeItems(),
+    middlewares.checkTradeComment(),
+    middlewares.withTryCatch(controllers.bot.sendGetOffer()),
+  );
+
   return router;
 };
