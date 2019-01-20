@@ -9,7 +9,7 @@ import _ from 'lodash';
 chai.use(cap);
 const expect = chai.expect;
 
-describe('GET /inventory', () => {
+describe('Steam Bot REST API', () => {
   const client = Mocks.getClientMock();
   const mocks = Mocks.getBotMockEvents();
   const state = new State<{ assets: string[] }>({ assets: [] });

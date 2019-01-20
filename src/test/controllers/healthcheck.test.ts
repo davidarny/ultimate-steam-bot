@@ -4,7 +4,7 @@ import chai from 'chai';
 
 const expect = chai.expect;
 
-describe('GET /healthcheck', async () => {
+describe('Healthcheck API', async () => {
   const client = Mocks.getClientMock();
   const mocks = Mocks.getBotMockEvents();
 

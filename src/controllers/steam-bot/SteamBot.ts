@@ -2,8 +2,11 @@ import config from '@config';
 import { ApiResponse } from '@entities/response';
 import State from '@entities/state';
 import * as SteamBotService from '@services/steam-bot';
+import logger from '@utils/logger';
+import * as BotSanitizer from '@utils/sanitizer/bot';
 import express from 'express';
 import _ from 'lodash';
+import request from 'request-promise';
 
 const OFFER_CANCEL_TIME = 120_000;
 
@@ -121,4 +124,71 @@ export function sendGetOffer() {
     res.json(new ApiResponse({ data: { offer_state: status, offer_id: offerId } }).get());
     return next();
   };
+}
+
+export async function onSendOfferState(
+  offerId: string,
+  partnerSteamId: string,
+  message: string,
+  data: object,
+) {
+  if (!config.app.sentOfferChangedUrl) {
+    logger.error(BotSanitizer.message('No `sentOfferChangedUrl` specified for bot!'));
+    return;
+  }
+  const options = {
+    method: 'POST',
+    url: config.app.sentOfferChangedUrl,
+    headers: {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+    },
+    body: {
+      data,
+      offer_id: offerId,
+      steam_id: partnerSteamId,
+      offer_state: message,
+    },
+    json: true,
+  };
+  try {
+    await request(options);
+  } catch (error) {
+    logger.error(BotSanitizer.message(), error);
+  }
+}
+
+export async function onSendOfferItems(
+  offerId: string,
+  partnerSteamId: string,
+  message: string,
+  data: object,
+  items: object[],
+) {
+  if (!config.app.webhookUrl) {
+    logger.error(BotSanitizer.message('No `webhookUrl` specified for bot!'));
+    return;
+  }
+  const options = {
+    method: 'POST',
+    url: config.app.webhookUrl,
+    headers: {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+    },
+    body: {
+      items,
+      bot_steam_id: config.bot.botId,
+      offer_id: offerId,
+      steam_id: partnerSteamId,
+      comment: message,
+      custom_data: data,
+    },
+    json: true,
+  };
+  try {
+    await request(options);
+  } catch (error) {
+    logger.error(BotSanitizer.message(), error);
+  }
 }

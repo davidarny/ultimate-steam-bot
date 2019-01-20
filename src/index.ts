@@ -1,4 +1,5 @@
 require('module-alias/register');
+import controllers from '@controllers';
 import ENodeEnv from '@entities/node-env';
 import SteamBot, { EBotEvents } from '@entities/steam-bot';
 import logger from '@utils/logger';
@@ -31,6 +32,8 @@ if (ENVIRONMENT !== ENodeEnv.TEST) {
   bot.on(EBotEvents.HEALTHCHECK, statuses =>
     logger.info(BotSanitizer.message(), BotSanitizer.status(statuses)),
   );
+  bot.on(EBotEvents.SEND_OFFER_STATE, controllers.bot.onSendOfferState);
+  bot.on(EBotEvents.SEND_OFFER_ITEMS, controllers.bot.onSendOfferItems);
 }
 
 export default server;

@@ -1,12 +1,11 @@
 import config from '@config';
-import SteamTotp from '@services/steam-totp';
+import * as Mocks from '@mocks';
 import chai from 'chai';
+
 const expect = chai.expect;
 
-describe('SteamTotp', () => {
-  let totp: SteamTotp;
-
-  before(() => (totp = new SteamTotp()));
+describe('Steam TOTP service', () => {
+  const totp = Mocks.getSteamTotpMock();
 
   it('should get auth code', () => {
     const code = totp.getAuthCode(config.bot.sharedSecret!);

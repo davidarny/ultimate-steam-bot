@@ -3,7 +3,7 @@ import chai from 'chai';
 
 const expect = chai.expect;
 
-describe('App Config', () => {
+describe('Config engine', () => {
   it('should have no undefined fields in config', () => {
     for (const key of Object.keys(config.app)) {
       const value = config.app[key];

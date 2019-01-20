@@ -133,6 +133,7 @@ export class SteamBot extends EventEmitter {
     });
   }
 
+  // tslint:disable-next-line:cognitive-complexity
   public async sendGetOrGiveOffer(
     type: 'get' | 'give',
     partner: string,

@@ -9,7 +9,7 @@ chai.use(cap);
 const expect = chai.expect;
 type TSteamBotStatus = { [K in EBotEvents]: string };
 
-describe('Bot', () => {
+describe('Steam Bot engine', () => {
   const bot = Mocks.getBotMock();
   const mocks = Mocks.getBotMockEvents();
 

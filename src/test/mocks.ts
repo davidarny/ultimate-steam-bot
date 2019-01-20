@@ -1,9 +1,11 @@
 import app from '@app';
 import SteamBot, { EBotEvents } from '@entities/steam-bot';
+import SteamTotp from '@services/steam-totp';
 import request from 'supertest';
 
 const client = request(app);
 const bot = SteamBot.getInstance();
+const totp = new SteamTotp();
 const mocks = {
   [EBotEvents.LOGIN]: getMockPromise(EBotEvents.LOGIN, bot),
   [EBotEvents.SET_COOKIES]: getMockPromise(EBotEvents.SET_COOKIES, bot),
@@ -26,6 +28,10 @@ export function getBotMock(): SteamBot {
 
 export function getClientMock(): request.SuperTest<request.Test> {
   return client;
+}
+
+export function getSteamTotpMock(): SteamTotp {
+  return totp;
 }
 
 export function sleep(timeout: number): Promise<void> {
