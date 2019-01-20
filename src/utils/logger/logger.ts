@@ -2,14 +2,13 @@ import ENodeEnv from '@entities/node-env';
 import { ENVIRONMENT } from '@utils/secrets';
 import bunyan from 'bunyan';
 
-const isTestEnv = ENVIRONMENT === ENodeEnv.TEST;
 const streams: bunyan.LoggerOptions['streams'] = [];
 
-if (!isTestEnv) {
+if (ENVIRONMENT !== ENodeEnv.TEST) {
   streams.push(
     {
       stream: process.stdout,
-      level: 'debug',
+      level: 'trace',
     },
     {
       level: 'trace',
