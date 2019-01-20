@@ -2,7 +2,7 @@ import ENodeEnv from '@entities/node-env';
 import { ENVIRONMENT } from '@utils/secrets';
 import bunyan from 'bunyan';
 
-const streams: bunyan.LoggerOptions['streams'] = [];
+export const streams: bunyan.LoggerOptions['streams'] = [];
 
 if (ENVIRONMENT !== ENodeEnv.TEST) {
   streams.push(

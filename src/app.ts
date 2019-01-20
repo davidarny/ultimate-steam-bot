@@ -1,6 +1,7 @@
 import config from '@config';
 import ENodeEnv from '@entities/node-env';
 import routes from '@routes';
+import { streams } from '@utils/logger/logger';
 import bodyparser from 'body-parser';
 import compression from 'compression';
 import errorhandler from 'errorhandler';
@@ -12,8 +13,6 @@ import * as middlewares from './middlewares';
 
 const app = express();
 const limiter = new RateLimit({ windowMs: 1000, max: 5 });
-const isTestEnv = config.app.env === ENodeEnv.TEST;
-const isDevEnv = config.app.env === ENodeEnv.DEVELOPMENT;
 
 app.set('port', config.app.port);
 app.use(limiter);
@@ -21,11 +20,12 @@ app.use(compression());
 app.use(helmet());
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
-if (isDevEnv) {
+if (config.app.env === ENodeEnv.DEVELOPMENT) {
   app.use(errorhandler());
 }
-if (!isTestEnv) {
-  app.use(ebl());
+if (config.app.env !== ENodeEnv.TEST) {
+  // @ts-ignore
+  app.use(ebl({ name: 'api', streams }));
 }
 
 app.use(middlewares.initContext(), middlewares.checkBotStatus());
