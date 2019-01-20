@@ -36,6 +36,7 @@ export class SteamBot extends EventEmitter {
   // Timers
   private static readonly HEALTHCHECK_CRON =
     ENVIRONMENT === ENodeEnv.TEST ? '* * * * * *' : '0 0 */1 * * *';
+  private static readonly CONFIRMATION_TIMEOUT = 1000;
   // Flags
   public statuses = {
     [EBotStatuses.WEB_SESSION]: false,
@@ -142,7 +143,7 @@ export class SteamBot extends EventEmitter {
     timeout: number,
     data?: object,
   ): Promise<[string, string]> {
-    return new Promise((resolve, reject) => {
+    const result = await new Promise<[string, string]>((resolve, reject) => {
       const offer = this.manager.createOffer(partner);
       if (type === 'get') {
         offer.data('data', data);
@@ -173,6 +174,13 @@ export class SteamBot extends EventEmitter {
         });
       });
     });
+    await new Promise(resolve => {
+      setTimeout(() => {
+        const [time, confKey, allowKey] = this.totp.getConfirmationKeys();
+        this.community.acceptAllConfirmations(time, confKey, allowKey, () => resolve());
+      }, SteamBot.CONFIRMATION_TIMEOUT);
+    });
+    return result;
   }
 
   private getTradeStatus(status: string) {
