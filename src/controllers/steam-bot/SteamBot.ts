@@ -179,7 +179,7 @@ export async function onSendOfferItems(
     },
     body: {
       items,
-      bot_steam_id: config.bot.botId,
+      bot_steam_id: config.bot.steamId,
       offer_id: offerId,
       steam_id: partnerSteamId,
       comment: message,
