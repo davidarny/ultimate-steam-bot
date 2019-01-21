@@ -163,7 +163,7 @@
     "@types/connect" "*"
     "@types/node" "*"
 
-"@types/bunyan@*", "@types/bunyan@^1.8.5":
+"@types/bunyan@^1.8.5":
   version "1.8.5"
   resolved "https://registry.yarnpkg.com/@types/bunyan/-/bunyan-1.8.5.tgz#d992adbce8ed20cde634764bd8f269f29f703647"
   integrity sha512-7n8ANtxh2c5A/NfCuv8cVtWcgSLdq76MQbtmbInpzXuPw4TSAReUJ+MGHK4m67I4zI3ynCJoABfaeHYJaYSeRg==
@@ -229,14 +229,6 @@
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
   integrity sha512-KEIlhXnIutzKwRbQkGWb/I4HFqBuUykAdHgDED6xqwXJfONCjF5VoE0cXEiurh3XauygxzeDzgtXUqvLkxFzzA==
-
-"@types/express-bunyan-logger@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@types/express-bunyan-logger/-/express-bunyan-logger-1.3.0.tgz#b7800d6cb0d62cedf1222a370f980e850f0f59ac"
-  integrity sha512-KdYvVivvsZQ2qNPomOkDM9lvvqbPd8KzlNjbj7rybyWESPK4uKaC3NdUCidAZabim2dZvBFGPbW2HSmepLgypg==
-  dependencies:
-    "@types/bunyan" "*"
-    "@types/express" "*"
 
 "@types/express-rate-limit@^3.3.0":
   version "3.3.0"

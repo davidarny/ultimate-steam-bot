@@ -1,8 +1,16 @@
 import SteamBot, { EBotEvents, EBotStatuses } from '@entities/steam-bot';
 import { autobind } from 'core-decorators';
+import _ from 'lodash';
 
 @autobind
 export class SteamCommunityController {
+  private static readonly CONFIRMATIONS_ERROR_THROTTLE = 5 * 60 * 1000; // 5 mins
+  private readonly onConfirmationsError = _.throttle(
+    (error: Error) =>
+      this.bot.emit(EBotEvents.ERROR, new Error('SteamCommunity confirmations error!'), error),
+    SteamCommunityController.CONFIRMATIONS_ERROR_THROTTLE,
+  );
+
   constructor(private readonly bot: SteamBot) {}
 
   public onSessionExpired(error: Error): void {
@@ -13,8 +21,7 @@ export class SteamCommunityController {
 
   public onConfirmations(error: Error | null, confs: object[]): void {
     if (error) {
-      this.bot.emit(EBotEvents.ERROR, new Error('SteamCommunity confirmations error!'), error);
-      return;
+      this.onConfirmationsError(error);
     }
     this.bot.emit(EBotEvents.CONFIRMATIONS, confs);
   }

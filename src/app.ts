@@ -24,8 +24,7 @@ if (config.app.env === ENodeEnv.DEVELOPMENT) {
   app.use(errorhandler());
 }
 if (config.app.env !== ENodeEnv.TEST) {
-  // @ts-ignore
-  app.use(ebl({ name: 'api', streams }));
+  app.use(ebl({ streams, name: 'api' }));
 }
 
 app.use(middlewares.initContext(), middlewares.checkBotStatus());

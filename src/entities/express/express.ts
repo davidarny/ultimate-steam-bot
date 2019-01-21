@@ -1,6 +1,5 @@
 // tslint:disable:interface-name
 import SteamBot from '@entities/steam-bot';
-import express from 'express';
 
 declare global {
   namespace Express {
