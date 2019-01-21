@@ -20,23 +20,31 @@ const server = app.listen(app.get('port'), () =>
 if (ENVIRONMENT !== ENodeEnv.TEST) {
   const bot = SteamBot.getInstance();
   // Log `error` events
-  bot.on(EBotEvents.ERROR, error => logger.error(BotSanitizer.message(), error));
+  bot.on(EBotEvents.ERROR, (...rest) => logger.error(BotSanitizer.message(), ...rest));
   // Log `login` event
-  bot.on(EBotEvents.LOGIN, () => logger.info(BotSanitizer.message('Successfully logged in')));
+  bot.on(EBotEvents.LOGIN, (...rest) =>
+    logger.info(BotSanitizer.message('Successfully logged in'), ...rest),
+  );
   // Log `SteamRequestLimit` error
-  bot.on(EBotEvents.LIMIT, () => logger.info(BotSanitizer.message('Steam request rate limit')));
+  bot.on(EBotEvents.LIMIT, (...rest) =>
+    logger.info(BotSanitizer.message('Steam request rate limit'), ...rest),
+  );
   // Log `cookies` has been set
-  bot.on(EBotEvents.SET_COOKIES, () =>
-    logger.info(BotSanitizer.message('Successfully set cookies')),
+  bot.on(EBotEvents.SET_COOKIES, (...rest) =>
+    logger.info(BotSanitizer.message('Successfully set cookies'), ...rest),
   );
   // Log `SteamGuard` events
-  bot.on(EBotEvents.STEAM_GUARD, () => logger.info(BotSanitizer.message('Got SteamGuard event')));
+  bot.on(EBotEvents.STEAM_GUARD, (...rest) =>
+    logger.info(BotSanitizer.message('Got SteamGuard event'), ...rest),
+  );
   // Log Game Coordinator logged in event
-  bot.on(EBotEvents.GC_CONNECTED, () =>
-    logger.info(BotSanitizer.message('Connected to Game Coordinator')),
+  bot.on(EBotEvents.GC_CONNECTED, (...rest) =>
+    logger.info(BotSanitizer.message('Connected to Game Coordinator'), ...rest),
   );
   // Log `disconnected` events
-  bot.on(EBotEvents.DISCONNECT, () => logger.info(BotSanitizer.message('Disconnected')));
+  bot.on(EBotEvents.DISCONNECT, (...rest) =>
+    logger.info(BotSanitizer.message('Disconnected'), ...rest),
+  );
   // Log healthcheck statuses
   bot.on(EBotEvents.HEALTHCHECK, statuses =>
     logger.info(BotSanitizer.message(), BotSanitizer.status(statuses)),

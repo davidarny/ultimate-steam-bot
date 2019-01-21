@@ -22,6 +22,7 @@ export class SteamCommunityController {
   public onConfirmations(error: Error | null, confs: object[]): void {
     if (error) {
       this.onConfirmationsError(error);
+      return;
     }
     this.bot.emit(EBotEvents.CONFIRMATIONS, confs);
   }
