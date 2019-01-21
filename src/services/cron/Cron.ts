@@ -1,6 +1,7 @@
 import { CronJob } from 'cron';
+import { ICron } from './ICron';
 
-export class Cron {
+export class Cron implements ICron {
   private readonly job: CronJob;
 
   constructor(cronTime: string, onTick: () => void) {

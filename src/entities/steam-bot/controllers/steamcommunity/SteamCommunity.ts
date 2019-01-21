@@ -16,6 +16,6 @@ export class SteamCommunityController {
       this.bot.emit(EBotEvents.ERROR, new Error('SteamCommunity confirmations error!'), error);
       return;
     }
-    this.bot.emit(EBotEvents.CONFIRMATION, confs);
+    this.bot.emit(EBotEvents.CONFIRMATIONS, confs);
   }
 }

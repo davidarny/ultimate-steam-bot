@@ -4,6 +4,7 @@ import ENodeEnv from '@entities/node-env';
 import { ETradeOfferEvents } from '@entities/steam-tradeoffer-manager';
 import { ESteamUserEvents } from '@entities/steam-user';
 import { ESteamCommunityEvents } from '@entities/steamcommunity';
+import ConfirmationsService from '@services/confirmations';
 import CronService from '@services/cron';
 import PriceService from '@services/price';
 import * as SteamBotService from '@services/steam-bot';
@@ -66,15 +67,21 @@ export class SteamBot extends EventEmitter {
     offer: new OfferController(this),
     coordinator: new GlobalOffensiveController(this),
   };
-  // Healthcheck CRON
+  // CRON services
   private readonly cron = new CronService(SteamBot.HEALTHCHECK_CRON, this.healthcheck);
   private readonly price = new PriceService();
+  private readonly confirmations = new ConfirmationsService(
+    this.totp,
+    this.community,
+    this.controllers.community.onConfirmations,
+  );
 
   private constructor() {
     super();
     this.init();
     this.cron.start();
     this.price.start();
+    this.confirmations.start();
   }
 
   public async getInventory(

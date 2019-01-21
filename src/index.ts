@@ -32,6 +32,9 @@ if (ENVIRONMENT !== ENodeEnv.TEST) {
   bot.on(EBotEvents.HEALTHCHECK, statuses =>
     logger.info(BotSanitizer.message(), BotSanitizer.status(statuses)),
   );
+  bot.on(EBotEvents.CONFIRMATIONS, confirmations =>
+    logger.info(BotSanitizer.message('Accepted confirmations'), confirmations),
+  );
   bot.on(EBotEvents.SEND_OFFER_STATE, controllers.bot.onSendOfferState);
   bot.on(EBotEvents.SEND_OFFER_ITEMS, controllers.bot.onSendOfferItems);
 }

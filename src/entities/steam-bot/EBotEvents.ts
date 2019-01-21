@@ -5,7 +5,7 @@ export enum EBotEvents {
   DISCONNECT = 'disconnect',
   STEAM_GUARD = 'steamGuard',
   SET_COOKIES = 'setCookies',
-  CONFIRMATION = 'confirmation',
+  CONFIRMATIONS = 'confirmations',
   HEALTHCHECK = 'healthcheck',
   NEW_OFFER = 'newOffer',
   OFFER_DECLINED = 'offerDeclined',

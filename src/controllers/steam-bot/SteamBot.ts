@@ -152,6 +152,7 @@ export async function onSendOfferState(
     json: true,
   };
   try {
+    logger.debug(BotSanitizer.message('SendOfferState'), options);
     await request(options);
   } catch (error) {
     logger.error(BotSanitizer.message(), error);
@@ -187,6 +188,7 @@ export async function onSendOfferItems(
     json: true,
   };
   try {
+    logger.debug(BotSanitizer.message('SendOfferItems'), options);
     await request(options);
   } catch (error) {
     logger.error(BotSanitizer.message(), error);

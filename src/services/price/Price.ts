@@ -2,6 +2,7 @@ import config from '@config';
 import ENodeEnv from '@entities/node-env';
 import RedisProvider from '@providers/redis';
 import Cron from '@services/cron';
+import { ICron } from '@services/cron/ICron';
 import logger from '@utils/logger';
 import * as ServerSanitizer from '@utils/sanitizer/server';
 import { ENVIRONMENT } from '@utils/secrets';
@@ -19,7 +20,7 @@ interface ISteamPriceItem {
   tr: number;
 }
 
-export class Price {
+export class Price implements ICron {
   private static readonly PRICE_POLL_CRON =
     ENVIRONMENT === ENodeEnv.TEST ? '*/5 * * * * *' : '* */15 * * * *';
   private static readonly FLUSH_CRON =

@@ -32,17 +32,6 @@ export class SteamUserController {
   public onWebSession(_sessionId: unknown, cookies: object[]): void {
     this.bot.manager.setCookies(cookies, this.bot.controllers.manager.onSetCookies);
     this.bot.community.setCookies(cookies);
-    try {
-      const [time, confKey, allowKey] = this.bot.totp.getConfirmationKeys();
-      this.bot.community.acceptAllConfirmations(
-        time,
-        confKey,
-        allowKey,
-        this.bot.controllers.community.onConfirmations,
-      );
-    } catch (error) {
-      this.bot.emit(EBotEvents.ERROR, error);
-    }
   }
 
   public onSteamGuard(_domain: unknown, callback: (code: string) => void): void {
