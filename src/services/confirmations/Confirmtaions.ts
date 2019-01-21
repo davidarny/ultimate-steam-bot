@@ -5,7 +5,7 @@ import { autobind } from 'core-decorators';
 import SteamCommunity from 'steamcommunity';
 
 export class Confirmations implements ICron {
-  private static readonly CONFIRMATIONS_CRON = '*/5 * * * * *';
+  private static readonly CONFIRMATIONS_CRON = '*/15 * * * * *';
   private readonly cron = new Cron(Confirmations.CONFIRMATIONS_CRON, this.accept);
 
   constructor(
