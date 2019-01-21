@@ -17,7 +17,7 @@ export class TradeOfferManagerController {
       EBotEvents.SEND_OFFER_STATE,
       offer.id,
       offer.partner.getSteamID64(),
-      offer.message,
+      offer.state,
       offer.data('data'),
     );
   }
