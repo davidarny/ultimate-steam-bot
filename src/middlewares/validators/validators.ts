@@ -9,7 +9,9 @@ export function checkBotId() {
     if (config.bot.botId === req.ctx.body.bot_id) {
       return next();
     }
-    return res.json(new ApiResponse({ error: new Error('"botId" field missing') }).get());
+    return res.json(
+      new ApiResponse({ error: new Error('"bot_id" field is missing or incorrect') }).get(),
+    );
   };
 }
 
@@ -18,7 +20,9 @@ export function checkSteamId() {
     if (!_.isNil(req.ctx.body.steam_id) && !_.isEmpty(req.ctx.body.steam_id)) {
       return next();
     }
-    return res.json(new ApiResponse({ error: new Error('"steam_id" field missing') }).get());
+    return res.json(
+      new ApiResponse({ error: new Error('"steam_id" field is missing or incorrect') }).get(),
+    );
   };
 }
 
@@ -27,7 +31,9 @@ export function checkGameId(ids: number[]) {
     if (ids.some(id => id === req.ctx.body.gameID)) {
       return next();
     }
-    return res.json(new ApiResponse({ error: new Error('"gameID" is incorrect') }).get());
+    return res.json(
+      new ApiResponse({ error: new Error('"gameID"field is missing or incorrect') }).get(),
+    );
   };
 }
 
@@ -49,7 +55,9 @@ export function checkBotStatus() {
 export function checkAssetsIds() {
   return (req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (_.isNil(req.ctx.body.asset_ids)) {
-      return res.json(new ApiResponse({ error: new Error('"asset_ids" field is missing') }).get());
+      return res.json(
+        new ApiResponse({ error: new Error('"asset_ids" field is missing or incorrect') }).get(),
+      );
     }
     if (!_.isArray(req.ctx.body.asset_ids)) {
       return res.json(
@@ -68,7 +76,9 @@ export function checkAssetsIds() {
 export function checkItemsLinks() {
   return (req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (_.isNil(req.ctx.body.links)) {
-      return res.json(new ApiResponse({ error: new Error('"links" field is missing') }).get());
+      return res.json(
+        new ApiResponse({ error: new Error('"links" field is missing or incorrect') }).get(),
+      );
     }
     if (!_.isArray(req.ctx.body.links)) {
       return res.json(new ApiResponse({ error: new Error('"links" should be an array') }).get());
@@ -85,7 +95,9 @@ export function checkTradeUrl() {
     if (!_.isNil(req.ctx.body.trade_url)) {
       return next();
     }
-    return res.json(new ApiResponse({ error: new Error('"trade_url" field is missing') }).get());
+    return res.json(
+      new ApiResponse({ error: new Error('"trade_url" field is missing or incorrect') }).get(),
+    );
   };
 }
 
@@ -94,14 +106,18 @@ export function checkTradeComment() {
     if (!_.isNil(req.ctx.body.comment)) {
       return next();
     }
-    return res.json(new ApiResponse({ error: new Error('"comment" field is missing') }).get());
+    return res.json(
+      new ApiResponse({ error: new Error('"comment" field is missing or incorrect') }).get(),
+    );
   };
 }
 
 export function checkTradeItems() {
   return (req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (_.isNil(req.ctx.body.items)) {
-      return res.json(new ApiResponse({ error: new Error('"items" field is missing') }).get());
+      return res.json(
+        new ApiResponse({ error: new Error('"items" field is missing or incorrect') }).get(),
+      );
     }
     if (!_.isArray(req.ctx.body.items)) {
       return res.json(new ApiResponse({ error: new Error('"items" should be an array') }).get());
