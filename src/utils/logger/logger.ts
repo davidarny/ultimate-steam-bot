@@ -15,7 +15,7 @@ if (ENVIRONMENT !== ENodeEnv.TEST) {
       type: 'rotating-file',
       path: './logs/debug.log',
       period: '1d',
-      count: Number.MAX_SAFE_INTEGER,
+      count: 180,
     },
   );
 }
