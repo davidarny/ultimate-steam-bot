@@ -10,7 +10,7 @@ describe('Healthcheck API', async () => {
 
   it('should return 200 OK', async () => {
     await expect(mocks[EBotEvents.SET_COOKIES]).to.be.fulfilled;
-    const response = await client.get('/healthcheck').expect(200);
+    const response = await client.get('/').expect(200);
     expect(response.body).to.have.property('success', true);
     expect(response.body.data).to.have.property('WEB_SESSION');
     expect(response.body.data).to.have.property('BLOCKED');
