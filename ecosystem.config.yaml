@@ -4,5 +4,5 @@ apps:
     name: utlimate-steam-bot
     exec_mode: fork
     watch: false
-    max_memory_restart: '512MB'
+    max_memory_restart: '512M'
     node_args: --trace-warnings

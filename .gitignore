@@ -3,6 +3,7 @@
 # Edit at https://www.gitignore.io/?templates=node,linux,macos,windows,typings,intellij+all,visualstudiocode
 
 dist/
+manager/hosts.js
 
 ### Intellij+all ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm

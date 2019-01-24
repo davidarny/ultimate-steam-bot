@@ -1,0 +1,19 @@
+{
+  "name": "csgomajor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "node -r dotenv/config index.js"
+  },
+  "author": "David Arutiunian",
+  "license": "ISC",
+  "dependencies": {
+    "argv": "^0.0.2",
+    "dotenv": "^6.2.0",
+    "lodash": "^4.17.11",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "simple-ssh": "^1.0.0"
+  }
+}
