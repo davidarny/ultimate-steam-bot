@@ -61,7 +61,11 @@ export class Price implements ICron {
       json: true,
     };
     try {
-      const response = await request(options);
+      const response: ISteamPriceItem[] | undefined = await request(options);
+      if (_.isNil(response)) {
+        logger.error(ServerSanitizer.message('Price Service got empty response'));
+        return;
+      }
       response.forEach((item: ISteamPriceItem) => {
         const size = _.size(_.toString(item.price));
         const price = `${
