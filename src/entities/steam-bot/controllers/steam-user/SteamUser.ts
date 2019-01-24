@@ -32,6 +32,7 @@ export class SteamUserController {
   public onWebSession(_sessionId: unknown, cookies: object[]): void {
     this.bot.manager.setCookies(cookies, this.bot.controllers.manager.onSetCookies);
     this.bot.community.setCookies(cookies);
+    this.bot.statuses[EBotStatuses.SESSION_EXPIRED] = false;
   }
 
   public onSteamGuard(_domain: unknown, callback: (code: string) => void): void {

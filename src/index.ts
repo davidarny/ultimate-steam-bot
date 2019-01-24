@@ -56,6 +56,10 @@ if (ENVIRONMENT !== ENodeEnv.TEST) {
       !_.isEmpty(confirmations) &&
       logger.info(BotSanitizer.message('Accepted confirmations'), confirmations),
   );
+  // Log bot NEW_OFFER event
+  bot.on(EBotEvents.NEW_OFFER, offer => logger.info(BotSanitizer.message('Got new Offer'), offer));
+  // Log offer decline
+  bot.on(EBotEvents.OFFER_DECLINED, () => logger.info(BotSanitizer.message('Offer declined!')));
   // Log bot specific event SEND_OFFER_STATE
   bot.on(EBotEvents.SEND_OFFER_STATE, controllers.bot.onSendOfferState);
   // Log bot specific event SEND_OFFER_ITEMS
