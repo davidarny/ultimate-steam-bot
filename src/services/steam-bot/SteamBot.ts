@@ -61,7 +61,7 @@ export function processMarketItem(
 
 export function getNextMyItem(item: object): object | undefined {
   if (!config.bot.steamId) {
-    logger.error(ServerSanitizer.message(), new Error('No `steamId` specified for bot!'));
+    logger.error(ServerSanitizer.message(), new Error('No `STEAM_ID` specified for bot!'));
     return;
   }
   return {
@@ -88,7 +88,7 @@ export function getNextMyItem(item: object): object | undefined {
 
 export function getNextTheirItem(item: object): object | undefined {
   if (!config.bot.steamId) {
-    logger.error(ServerSanitizer.message(), new Error('No `steamId` specified for bot!'));
+    logger.error(ServerSanitizer.message(), new Error('No `STEAM_ID` specified for bot!'));
     return;
   }
   return {

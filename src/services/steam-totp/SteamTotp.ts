@@ -19,7 +19,7 @@ export class SteamTotp {
   public getConfirmationKeys(): [number, string, string] {
     const time = Math.floor(Date.now() / 1000);
     if (!config.bot.identitySecret) {
-      throw new Error('No `identitySecret` specified for bot!');
+      throw new Error('No `STEAM_IDENTITY_SECRET` specified for bot!');
     }
     const confKey = SteamTotpPkg.getConfirmationKey(config.bot.identitySecret, time, 'conf');
     const allowKey = SteamTotpPkg.getConfirmationKey(config.bot.identitySecret, time, 'allow');

@@ -37,7 +37,7 @@ export class SteamUserController {
 
   public onSteamGuard(_domain: unknown, callback: (code: string) => void): void {
     if (!config.bot.sharedSecret) {
-      this.bot.emit(EBotEvents.ERROR, new Error('No `sharedSecret` specified for bot!'));
+      this.bot.emit(EBotEvents.ERROR, new Error('No `STEAM_SHARED_SECRET` specified for bot!'));
       return;
     }
     const code = this.bot.totp.getAuthCode(config.bot.sharedSecret);
@@ -54,7 +54,7 @@ export class SteamUserController {
     this.bot.client.setPersona(SteamUser.EPersonaState.Online);
     setTimeout(() => {
       if (!config.bot.steamId) {
-        this.bot.emit(EBotEvents.ERROR, new Error('No `steamId` specified for bot!'));
+        this.bot.emit(EBotEvents.ERROR, new Error('No `STEAM_ID` specified for bot!'));
         return;
       }
       this.bot.client.getPersonas([config.bot.steamId], this.onGetPersonas);
@@ -67,12 +67,12 @@ export class SteamUserController {
     if (!this.bot.statuses[EBotStatuses.BLOCKED]) {
       this.bot.client.gamesPlayed([config.app.game]);
     } else {
-      this.bot.emit(EBotEvents.ERROR, new Error('Bot got `blocked` state!'));
+      this.bot.emit(EBotEvents.ERROR, new Error('SteamBot got `BLOCKED` state!'));
       return;
     }
     setTimeout(() => {
       if (!config.bot.steamId) {
-        this.bot.emit(EBotEvents.ERROR, new Error('No `steamId` specified for bot!'));
+        this.bot.emit(EBotEvents.ERROR, new Error('No `STEAM_ID` specified for bot!'));
         return;
       }
       this.bot.client.getPersonas([config.bot.steamId], this.onGetPersonasSecondTime);

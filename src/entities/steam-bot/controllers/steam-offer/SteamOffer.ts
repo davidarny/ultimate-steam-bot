@@ -52,7 +52,7 @@ export class SteamOfferController {
 
   private getNextReceivedItem(item: object): object | undefined {
     if (!config.bot.steamId) {
-      this.bot.emit(EBotEvents.ERROR, new Error('No `steamId` specified for bot!'));
+      this.bot.emit(EBotEvents.ERROR, new Error('No `STEAM_ID` specified for bot!'));
       return;
     }
     return {

@@ -111,16 +111,16 @@ export class SteamBot extends EventEmitter {
       this.client.webLogOn();
     } else {
       if (!config.bot.sharedSecret) {
-        this.emit(EBotEvents.ERROR, new Error('No `sharedSecret` specified for bot!'));
+        this.emit(EBotEvents.ERROR, new Error('No `STEAM_SHARED_SECRET` specified for bot!'));
         return;
       }
       const tfa = this.totp.getAuthCode(config.bot.sharedSecret);
       if (!config.bot.accountName) {
-        this.emit(EBotEvents.ERROR, new Error('No `accountName` specified for bot!'));
+        this.emit(EBotEvents.ERROR, new Error('No `STEAM_ACCOUNT_NAME` specified for bot!'));
         return;
       }
       if (!config.bot.password) {
-        this.emit(EBotEvents.ERROR, new Error('No `accountName` specified for bot!'));
+        this.emit(EBotEvents.ERROR, new Error('No `STEAM_ACCOUNT_NAME` specified for bot!'));
         return;
       }
       this.client.logOn({
