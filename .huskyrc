@@ -1,6 +1,6 @@
 {
     "hooks": {
-        "pre-commit": "pretty-quick --staged && git add . && lint-staged",
+        "pre-commit": "pretty-quick --staged && lint-staged",
         "pre-push": "yarn run test"
     }
 }
