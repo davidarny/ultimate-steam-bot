@@ -8,6 +8,7 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/DavidArutiunian/ultimate-steam-bot.svg)
 ![GitHub last commit](https://img.shields.io/github/last-commit/DavidArutiunian/ultimate-steam-bot.svg)
 ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/DavidArutiunian/ultimate-steam-bot.svg)
+[![TLOC](https://tokei.rs/b1/github/DavidArutiunian/ultimate-steam-bot)](https://github.com/DavidArutiunian/ultimate-steam-bot)
 
 ## Start in development
 
