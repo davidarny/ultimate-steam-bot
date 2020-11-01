@@ -31,10 +31,10 @@ jobs:
           paths:
             - ~/.cache/yarn
 
-      - run:
-          name: Run Tests
-          command: npm run coverage
+#       - run:
+#           name: Run Tests
+#           command: npm run coverage
 
-      - store_artifacts:
-          path: coverage
-          prefix: coverage
+#       - store_artifacts:
+#           path: coverage
+#           prefix: coverage
