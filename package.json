@@ -41,7 +41,7 @@
     "helmet": "^3.15.0",
     "lodash": "^4.17.21",
     "module-alias": "^2.1.0",
-    "redis": "^2.8.0",
+    "redis": "^3.1.1",
     "request-promise": "^4.2.2",
     "steam-totp": "^2.1.0",
     "steam-tradeoffer-manager": "^2.9.4",
